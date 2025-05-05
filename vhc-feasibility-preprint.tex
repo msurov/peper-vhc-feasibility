@@ -12,8 +12,8 @@
 \usepackage{url}
 
 \title{\LARGE \bf
-    Virtual Holonomic Constraints in Motion Planning:\\
-    Revisiting Feasibility and Limitations
+  Virtual Holonomic Constraints in Motion Planning:\\
+  Revisiting Feasibility and Limitations
 }
 \author{
   Maksim Surov$^{1}$
@@ -150,26 +150,7 @@
 
     In Section~\ref{sec:pvtol-trajectory}, we examine an example of a periodic trajectory of the PVTOL aircraft and prove that there {\bf exists no VHC} satisfying
     Definition~\ref{def:VHC} associated with this trajectory. For this trajectory we also demonstrate the existence of a state feedback providing orbital asymptotic stability.
-    In Section~\ref{sec:non-regular-vhc}, we formulate Theorem~\ref{thm:singularity-necessity} that establishes the necessity of the failure of the controlled invariance property for a certain class of solutions. We also present a class of trajectories of the PVTOL system for which the Definition~\ref{def:VHC} fails. The concluding remarks and suggestions for a more precise definition are given in Section~\ref{sec:conclusion}.
-
-  % \subsection*{Notation}
-  %   In accordance with \cite{Isidori-1995}, we introduce the following
-  %   conventions:
-  %   \begin{itemize}
-  %     \item 
-  %       The directional derivative of a smooth function $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
-  %       along a vector field $f\in T\mathbb{R}^{n}$ is denoted by $L_{f}h\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}f\left(q\right)\in\mathbb{R}^{k}$.
-  %     \item
-  %       The higher-order directional derivatives are defined recursively as:
-  %       $L_{f}^{l}h\left(q\right)\equiv L_{f}L_{f}^{l-1}h\left(q\right)\in\mathbb{R}^{k}$.
-  %     \item
-  %       The Jacobian matrix of a function $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
-  %       is denoted by $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}\in\mathbb{R}^{k\times n}$.
-  %     \item 
-  %       The column space of a matrix $A$ is denoted by $\mathrm{Im}\left[A\right]$. 
-  %     \item
-  %       The kernel of a matrix $A\in\mathbb{R}^{n\times m}$ is defined as: $\ker\left[ A\right]\equiv\left\{ x\in\mathbb{R}^{m}\mid Ax=0\right\} .$
-  %   \end{itemize}
+    In Section~\ref{sec:non-regular-vhc}, we formulate Theorem~\ref{thm:singularity-necessity} that establishes the necessity of the failure of the controlled invariance property for a certain class of solutions. We also present a class of trajectories of the PVTOL system for which Definition~\ref{def:VHC} fails. The concluding remarks and suggestions for a more precise definition are given in Section~\ref{sec:conclusion}.
 
   \section{Motivating Example: Periodic Trajectory of a PVTOL Aircraft}
   \label{sec:pvtol-trajectory}
@@ -194,20 +175,21 @@
     coordinates and $u=\left(u_{1},u_{2}\right)^{\top}\in\mathbb{R}^{2}$
     represents the control inputs, which are allowed to take both positive and negative values.
     The coordinates $x,z$ specify the position of aircraft's center of mass, while the angle $\psi$ defines its attitude, as illustrated in Fig.~\ref{fig:pvtol-tic-toc}.
-    It is straightforward to verify that the PVTOL dynamics are of the Euler-Lagrange type, with the following matrices 
+    It is straightforward to verify that the PVTOL dynamics are of the Euler-Lagrange type, with the following matrices: 
     $M = I_{3\times3}$, $C = 0_{3\times3}$, 
-    \begin{align*}
-      &\, G = \left(\begin{array}{c}
+    \[
+      G = \left(\begin{array}{c}
           0\\
           1\\
           0
-      \end{array}\right)\quad\text{and}\quad
+      \end{array}\right)
+      \quad\text{and}\quad
       B\left(q\right)=\left(\begin{array}{cc}
           -\sin\psi & 0\\
           \cos\psi & 0\\
           0 & 1
       \end{array}\right).
-    \end{align*}
+    \]
     In this notation, the system can be rewritten compactly as
     $$
         \ddot{q}=B\left(q\right)u-G,
@@ -215,18 +197,18 @@
     which aligns with the general structure of Euler--Lagrange systems~(\ref{eq:lag-sys}).
     
   \subsection{Tic-Toc Maneuver of PVTOL Aircraft}
-    Let us consider two functions $q_{*}\left(t\right)\in C^{\omega}$, $u_{*}\left(t\right)\in C^{\omega}$ defined as
+    Let us consider two analytic functions
     \begin{align}
     \label{eq:ref-traj}
       q_{*}\left(t\right) & =\left(\begin{array}{c}
           \sin t\\
           -\frac{1}{2}\sin^{2}t\\
           \frac{\pi}{2}-\arctan\left(2\sin t\right)
-          \end{array}\right)\quad\text{and}\\
+          \end{array}\right) \in C^\omega(\mathbb{R}) \quad\text{and}\\
       u_{*}\left(t\right) & =\left(\begin{array}{c}
           \sin t\sqrt{4\sin^{2}t+1}\\
           \frac{12\sin t+2\sin3t}{\left(3-2\cos2t\right)^{2}}
-          \end{array}\right).\nonumber 
+          \end{array}\right)  \in C^\omega(\mathbb{R}).\nonumber 
     \end{align}
     It can be readily verified by direct substitution that the pair $\left(q_{*}\left(t\right),u_{*}\left(t\right)\right)$
     satisfies equations~(\ref{eq:pvtol-dynamics}). 
@@ -391,7 +373,7 @@
     and satisfies equation~(\ref{eq:pvtol-reduced-dynamics}).
     By selecting $\theta_{1}=-1$ and $\theta_{2}=1$,
     we obtain the solution $\theta_{*}\left(t\right)=\sin t$
-    and consequently, the trajectory $q_{*}\left(t\right)$ presented in~(\ref{eq:ref-traj}).
+    and consequently, the trajectory $q_{*}\left(t\right) = \phi(\theta_*(t))$ presented in~(\ref{eq:ref-traj}).
     
     As observed, equation~(\ref{eq:pvtol-reduced-dynamics}) exhibits a singularity
     at $\theta=0$, thereby violating requirements of the Picard-Lindelöf
@@ -461,11 +443,11 @@
       satisfies 
       \begin{align}
       \label{eq:singularity-condition}
-        \exists t_{s} & :\,\dot{q}_{*}\left(t_{s}\right)\ne0\quad\text{and}\nonumber \\
-           & B_{\perp}\left(q_{*}\left(t_{s}\right)\right)M\left(q_{*}\left(t_{s}\right)\right)\dot{q}_{*}\left(t_{s}\right)=0,
+        \exists \, t_s : & \, \, \dot{q}_{*}\left(t_{s}\right)\ne0\quad\text{and}\nonumber \\
+                      & \, \, B_{\perp}\left(q_{*}\left(t_{s}\right)\right)M\left(q_{*}\left(t_{s}\right)\right)\dot{q}_{*}\left(t_{s}\right)=0,
       \end{align}
       where $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n} \setminus \left\{ 0\right\} $
-      is a left annihilator of $B\left(q\right)$. Then the reduced dynamics~(\ref{eq:alpha-beta-gamma})
+      is a left annihilator of $B\left(q\right)$. Then, reduced dynamics~(\ref{eq:alpha-beta-gamma})
       corresponding to \textbf{any} smooth parametrization $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
       will necessarily satisfy
       \begin{equation}
@@ -475,7 +457,7 @@
       then the reduced dynamics exhibit a non-removable singularity at $\theta_{s}$.
     \end{thm}
 
-    The singularities in the reduced dynamics play a crucial role in the loss of controlled invariance of the set $\Gamma$. 
+    The singularities in reduced dynamics play a crucial role in the loss of controlled invariance of the set $\Gamma$. 
     For a trajectory $q_{*}\left(t\right)$ of a general mechanical system~(\ref{eq:lag-sys}) the vanishing
   of the coefficient $\alpha\left(\theta_{s}\right)$
     in corresponding reduced dynamics under parametrization
