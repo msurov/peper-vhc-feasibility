@@ -1,0 +1,261 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+The singularities in the reduced dynamics play a crucial role in the loss of controlled invariance of the set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+.
+ For a trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+ of a general mechanical system
+\begin_inset space ~
+\end_inset
+
+(1) the vanishing of the coefficient 
+\begin_inset Formula $\alpha\left(\theta_{*}\left(t_{s}\right)\right)$
+\end_inset
+
+ in corresponding reduced dynamics along a parametrization 
+\begin_inset Formula $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+\end_inset
+
+ imposes a specific constraint on the derivative 
+\begin_inset Formula $\dot{\theta}_{s}$
+\end_inset
+
+.
+ In particular,
+ under the assumption that namely 
+\begin_inset Formula $\theta_{*}\left(t\right)$
+\end_inset
+
+ is smooth,
+ the following relation must hold:
+\begin_inset Formula 
+\begin{equation}
+\beta\left(\theta_{s}\right)\dot{\theta}_{s}^{2}+\gamma\left(\theta_{s}\right)=0,\label{eq:constr-for-dtheta}
+\end{equation}
+
+\end_inset
+
+If this equation is solvable – that is,
+ if coefficients 
+\begin_inset Formula $\beta\left(\theta_{s}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma\left(\theta_{s}\right)$
+\end_inset
+
+ have opposite signs – then the mechanical system at the configuration 
+\begin_inset Formula $q_{s}=\phi\left(\theta_{s}\right)$
+\end_inset
+
+ can move along the direction 
+\begin_inset Formula $\phi'\left(\theta_{s}\right)$
+\end_inset
+
+,
+ but only with a specific velocity given by:
+\begin_inset Formula 
+\[
+\dot{q}_{s}=\pm\sqrt{-\frac{\gamma\left(\theta_{s}\right)}{\beta\left(\theta_{s}\right)}}\phi'\left(\theta_{s}\right).
+\]
+
+\end_inset
+
+A similar result is obtained when considering an implicit VHC 
+\begin_inset Formula $h\left(q_{*}\left(t\right)\right)\equiv0$
+\end_inset
+
+.
+ In this case,
+ the admissible velocity 
+\begin_inset Formula $\dot{q}_{s}$
+\end_inset
+
+ can be determined by imposing the conditions
+\begin_inset Formula 
+\[
+\frac{d}{dt}h\left(q_{*}\left(t\right)\right)=0,\quad\frac{d^{2}}{dt^{2}}h\left(q_{*}\left(t\right)\right)=0\quad\text{at}\,t=t_{s}.
+\]
+
+\end_inset
+
+These conditions lead to a system of two equations with respect to 
+\begin_inset Formula $\dot{q}_{s}$
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{align}
+NL_{\dot{q}_{s}}^{2}h\left(q_{s}\right)-Ndh\left(q_{s}\right)C\left(q_{s},\dot{q}_{s}\right)\dot{q}_{s} & =Ndh\left(q_{s}\right)G\left(q_{s}\right)\label{eq:condition-for-dq}\\
+Ndh\left(q_{s}\right)\dot{q}_{s} & =0,\nonumber 
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $N\in\ker\left[dh\left(q_{s}\right)B\left(q_{s}\right)\right]^{\top}\setminus\left\{ 0\right\} $
+\end_inset
+
+.
+ Substituting 
+\begin_inset Formula $\dot{q}_{s}=\dot{\theta}_{s}V$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $V\in\ker\left[Ndh\left(q_{s}\right)\right]\setminus\left\{ 0\right\} $
+\end_inset
+
+ is a constant,
+ treduces the system to a quadratic equation in 
+\begin_inset Formula $\dot{\theta}_{s}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+N\left(L_{V}^{2}h\left(q_{s}\right)-dh\left(q_{s}\right)C\left(q_{s},V\right)V\right)\dot{\theta}_{s}^{2}=Ndh\left(q_{s}\right)G\left(q_{s}\right)
+\]
+
+\end_inset
+
+which is equivalent to equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:constr-for-dtheta"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ The condition 
+\begin_inset Formula $B_{\perp}\left(q_{s}\right)G\left(q_{s}\right)\ne0$
+\end_inset
+
+ in Theorem~
+\backslash
+ref{thm:singularity-necessity} implies that 
+\begin_inset Formula $Ndh\left(q_{s}\right)G\left(q_{s}\right)\ne0$
+\end_inset
+
+.
+ Consequently,
+ equation~(
+\backslash
+ref{eq:condition-for-dq}) either admits two solutions of opposite signs or has no solution at all.
+ The former case permits the existence of smooth trajectories 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+,
+ as demonstrated in section above,
+ but destroys the structure of the controlled invariant manifold.
+ Therefore,
+ Definition~
+\backslash
+ref{def:VHC} excludes from consideration all trajectories described in Theorem~
+\backslash
+ref{thm:singularity-necessity}.
+\end_layout
+
+\end_body
+\end_document

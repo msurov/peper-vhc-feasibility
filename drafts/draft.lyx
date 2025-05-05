@@ -1,0 +1,203 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{q}=M^{-1}\left(q\right)\left(B\left(q\right)u-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{y}=\frac{\partial h\left(q\right)}{\partial q}M^{-1}\left(q\right)\left(B\left(q\right)u-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)\right)+\frac{\partial}{\partial q}\left(\frac{\partial h\left(q\right)}{\partial q}\dot{q}\right)\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+я пришёл к выводу,
+ что матрица 
+\begin_inset Formula $\frac{\partial h\left(q\right)}{\partial q}M^{-1}\left(q\right)B\left(q\right)$
+\end_inset
+
+ в точке 
+\begin_inset Formula $q_{0}$
+\end_inset
+
+ должна иметь левый аннигилятор 
+\begin_inset Formula $W_{\perp}\left(q_{0}\right)\in\mathbb{R}^{2\times1}$
+\end_inset
+
+.
+ Нужно доказать,
+ что для любой 
+\begin_inset Formula $h$
+\end_inset
+
+ найдутся ненулевые слагаемые в 
+\begin_inset Formula 
+\[
+W_{\perp}\frac{\partial h\left(q\right)}{\partial q}M^{-1}\left(q\right)\left(-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)\right)+W_{\perp}\frac{\partial}{\partial q}\left(\frac{\partial h\left(q\right)}{\partial q}\dot{q}\right)\dot{q}
+\]
+
+\end_inset
+
+В моём случае
+\begin_inset Formula 
+\[
+-W_{\perp}\frac{\partial h\left(q\right)}{\partial q}\left(\begin{array}{c}
+0\\
+1\\
+0
+\end{array}\right)+W_{\perp}\frac{\partial}{\partial q}\left(\frac{\partial h\left(q\right)}{\partial q}\dot{q}\right)\dot{q}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial h\left(q_{*}\left(t\right)\right)}{\partial q}\dot{q}_{*}\left(t\right)=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

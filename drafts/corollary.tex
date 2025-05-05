@@ -1,0 +1,56 @@
+%% LyX 2.4.2.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[american]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{babel}
+\begin{document}
+		The singularities in the reduced dynamics play a crucial role in the
+		loss of controlled invariance of the set $\Gamma$. For a trajectory
+		$q_{*}\left(t\right)$ of a general mechanical system~(1) the vanishing
+		of the coefficient $\alpha\left(\theta_{*}\left(t_{s}\right)\right)$
+		in corresponding reduced dynamics along a parametrization $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+		imposes a specific constraint on the derivative $\dot{\theta}_{s}$.
+		In particular, under the assumption that namely $\theta_{*}\left(t\right)$
+		is smooth, the following relation must hold:
+		\begin{equation}
+		\beta\left(\theta_{s}\right)\dot{\theta}_{s}^{2}+\gamma\left(\theta_{s}\right)=0,\label{eq:constr-for-dtheta}
+		\end{equation}
+		If this equation is solvable -- that is, if coefficients $\beta\left(\theta_{s}\right)$
+		and $\gamma\left(\theta_{s}\right)$ have opposite signs -- then
+		the mechanical system at the configuration $q_{s}=\phi\left(\theta_{s}\right)$
+		can move along the direction $\phi'\left(\theta_{s}\right)$, but
+		only with a specific velocity given by:
+		\[
+		\dot{q}_{s}=\pm\sqrt{-\frac{\gamma\left(\theta_{s}\right)}{\beta\left(\theta_{s}\right)}}\phi'\left(\theta_{s}\right).
+		\]
+		A similar result is obtained when considering an implicit VHC $h\left(q_{*}\left(t\right)\right)\equiv0$.
+		In this case, the admissible velocity $\dot{q}_{s}$ can be determined
+		by imposing the conditions
+		\[
+		\frac{d}{dt}h\left(q_{*}\left(t\right)\right)=0,\quad\frac{d^{2}}{dt^{2}}h\left(q_{*}\left(t\right)\right)=0\quad\text{at}\,t=t_{s}.
+		\]
+		These conditions lead to a system of two equations with respect to
+		$\dot{q}_{s}$ 
+		\begin{align}
+		NL_{\dot{q}_{s}}^{2}h\left(q_{s}\right)-Ndh\left(q_{s}\right)C\left(q_{s},\dot{q}_{s}\right)\dot{q}_{s} & =Ndh\left(q_{s}\right)G\left(q_{s}\right)\label{eq:condition-for-dq}\\
+		Ndh\left(q_{s}\right)\dot{q}_{s} & =0,\nonumber 
+		\end{align}
+		where $N\in\ker\left[dh\left(q_{s}\right)B\left(q_{s}\right)\right]^{\top}\setminus\left\{ 0\right\} $.
+		Substituting $\dot{q}_{s}=\dot{\theta}_{s}V$, where $V\in\ker\left[Ndh\left(q_{s}\right)\right]\setminus\left\{ 0\right\} $
+		is a constant, treduces the system to a quadratic equation in $\dot{\theta}_{s}$:
+		\[
+		N\left(L_{V}^{2}h\left(q_{s}\right)-dh\left(q_{s}\right)C\left(q_{s},V\right)V\right)\dot{\theta}_{s}^{2}=Ndh\left(q_{s}\right)G\left(q_{s}\right)
+		\]
+		which is equivalent to equation~(\ref{eq:constr-for-dtheta}). The
+		condition $B_{\perp}\left(q_{s}\right)G\left(q_{s}\right)\ne0$ in
+		Theorem\textasciitilde\textbackslash ref\{thm:singularity-necessity\}
+		implies that $Ndh\left(q_{s}\right)G\left(q_{s}\right)\ne0$. Consequently,
+		equation\textasciitilde (\textbackslash ref\{eq:condition-for-dq\})
+		either admits two solutions of opposite signs or has no solution at
+		all. The former case permits the existence of smooth trajectories
+		$q_{*}\left(t\right)$, as demonstrated in section above, but destroys
+		the structure of the controlled invariant manifold. Therefore, Definition\textasciitilde\textbackslash ref\{def:VHC\}
+		excludes from consideration all trajectories described in Theorem\textasciitilde\textbackslash ref\{thm:singularity-necessity\}.
+\end{document}

@@ -1,0 +1,3547 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass IEEEtran
+\options twocolumn
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Virtual Holonomic Constraints in Motion Planning:
+ Revisiting Feasibility and Limitations
+\end_layout
+
+\begin_layout Abstract
+The paper is devoted to the question of feasibility of virtual holonomic constraints (VHCs) in application to the problem of trajectory planning for underactuated mechanical systems with underactuation degree of one.
+ While prior publications have established a widely adopted definition of feasibility,
+ we demonstrate that this definition is overly restrictive,
+ what leads to excluding a broad class of feasible trajectories from consideration.
+\end_layout
+
+\begin_layout Abstract
+To illustrate this point,
+ we examine periodic motion planning for the PVTOL system.
+ We present smooth and stabilizable trajectories that,
+ while not satisfying the conventional feasibility conditions for VHCs,
+ nevertheless exhibit desirable control properties.
+ This observation invites reconsideration of how feasibility is defined for such constraints,
+ potentially expanding their practical utility in motion planning applications.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+In this paper,
+ we consider Euler-Lagrange systems described by the equation
+\begin_inset Formula 
+\begin{equation}
+M\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right)=B\left(q\right)u\label{eq:lag-sys}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $q\in\mathbb{R}^{n}$
+\end_inset
+
+ denotes the generalized coordinates and 
+\begin_inset Formula $u\in\mathbb{R}^{n-1}$
+\end_inset
+
+ represents the control inputs.
+ For simplicity,
+ we assume the configuration space is 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+,
+ thereby avoiding a discussion of its topological properties.
+ The matrix 
+\begin_inset Formula $M\left(q\right)\in\mathbb{R}^{n\times n}$
+\end_inset
+
+ is positive definite;
+ 
+\begin_inset Formula $C\left(q,\dot{q}\right)\in\mathbb{R}^{n\times n}$
+\end_inset
+
+ is linear in 
+\begin_inset Formula $\dot{q}$
+\end_inset
+
+;
+ 
+\begin_inset Formula $G\left(q\right)\in\mathbb{R}^{n}$
+\end_inset
+
+ is a vector;
+ 
+\begin_inset Formula $B\left(q\right)\in\mathbb{R}^{n\times\left(n-1\right)}$
+\end_inset
+
+ is of rank 
+\begin_inset Formula $n-1$
+\end_inset
+
+.
+ All functions are assumed to be continuously differentiable.
+ This system is underactuated with an underactuation degree of one.
+\end_layout
+
+\begin_layout Standard
+For the system
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ we consider the problem of motion planning,
+ which involves finding smooth functions 
+\begin_inset Formula $q_{*}\left(t\right)\in C^{2}\left(\mathbb{R}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $u_{*}\left(t\right)\in C^{0}\left(\mathbb{R}\right)$
+\end_inset
+
+ that satisfy the system dynamics.
+ While specific applications may impose additional requirements on these functions,
+ a typical criterion is the stabilizability of the corresponding phase trajectory 
+\begin_inset Formula $\left(q_{*}\left(t\right),\dot{q}_{*}\left(t\right)\right)$
+\end_inset
+
+,
+ which ensures that the planned motion can be realized and maintained on a physical system.
+\end_layout
+
+\begin_layout Standard
+This problem has been studied in a number of publications
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Shiriaev-2005-constructive-tool,Surov-2015,Freidovich-2007,Maggiore-2013,Consolini2011"
+literal "false"
+
+\end_inset
+
+ using the 
+\series bold
+virtual holonomic constraints
+\series default
+ (VHCs) approach.
+ This method assumes that the desired trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+ satisfies a geometric constraint of the form 
+\begin_inset Formula $h\left(q_{*}\left(t\right)\right)=0$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $h:\mathbb{R}^{n}\to\mathbb{R}^{n-1}$
+\end_inset
+
+ is a smooth function with jacobian 
+\begin_inset Formula $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}$
+\end_inset
+
+ of rank 
+\begin_inset Formula $n-1$
+\end_inset
+
+ (see,
+ e.g.,
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Otsason-2019,Maggiore-2013"
+literal "false"
+
+\end_inset
+
+).
+ Alternatively,
+ the VHC can be defined in parametric form 
+\begin_inset Formula $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is a scalar parameter and 
+\begin_inset Formula $\phi:\mathbb{R}\to\mathbb{R}^{n}$
+\end_inset
+
+ is a smooth function.
+ As shown in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Shiriaev-2005-constructive-tool"
+literal "false"
+
+\end_inset
+
+,
+ the VHC framework enables reduction of the original 
+\begin_inset Formula $2n$
+\end_inset
+
+-dimensional dynamics
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to a single scalar second-order differential equation,
+ known as the 
+\series bold
+reduced dynamics
+\series default
+.
+ A solution 
+\begin_inset Formula $\theta_{*}\left(t\right)$
+\end_inset
+
+ to this equation automatically defines a corresponding trajectory 
+\begin_inset Formula $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+\end_inset
+
+ of the original system
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ This technique has significantly simplified the motion planning problem and has facilitated the solution of many challenging control tasks
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Buss-2016,Freidovich-2007,Surov-2015"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Maggiore-2013"
+literal "false"
+
+\end_inset
+
+,
+ the authors initiated a detailed discussion on the definition of VHC and the corresponding necessary conditions on the functions 
+\begin_inset Formula $\phi\left(\cdot\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $h\left(\cdot\right)$
+\end_inset
+
+.
+ To this end,
+ they relate the VHC concept to the notion of 
+\series bold
+controlled invariant manifolds
+\series default
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Chapter 6.1"
+key "Isidori-1995"
+literal "false"
+
+\end_inset
+
+.
+ For clarity and brevity,
+ we present a slightly modified version of the definition of VHC,
+ adapted from 
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Definition 2.1"
+key "Maggiore-2013"
+literal "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Definition
+\begin_inset CommandInset label
+LatexCommand label
+name "def:VHC"
+
+\end_inset
+
+ A virtual holonomic constraint of order 
+\begin_inset Formula $n-1$
+\end_inset
+
+ is a relation 
+\begin_inset Formula $h\left(q\right)=0$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $h:\mathbb{R}^{n}\to\mathbb{R}^{n-1}$
+\end_inset
+
+ is smooth,
+ 
+\begin_inset Formula $\mathrm{rank}\left(dh\left(q\right)\right)=n-1$
+\end_inset
+
+ for all 
+\begin_inset Formula $q\in h^{-1}\left(0\right)$
+\end_inset
+
+ and the set 
+\begin_inset Formula 
+\[
+\Gamma=\left\{ \left(q,\dot{q}\right):h\left(q\right)=0\quad\text{and}\quad\frac{\partial h\left(q\right)}{\partial q}\dot{q}=0\right\} 
+\]
+
+\end_inset
+
+is 
+\series bold
+controlled invariant
+\series default
+.
+ That is,
+ there exists a smooth feedback 
+\begin_inset Formula $u\left(q,\dot{q}\right)$
+\end_inset
+
+ such that 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is positively invariant for the closed-loop system.
+ The set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is called the 
+\series bold
+constraint manifold
+\series default
+ associated with the VHC 
+\begin_inset Formula $h\left(q\right)=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similar definitions can be found in subsequent publications 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Consolini-2018,Consolini2010,Consolini2011,Maggiore-2013,Jankuloski2012"
+literal "false"
+
+\end_inset
+
+ by the same group of authors.
+ In some of these works 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Consolini2010,Consolini2011,Jankuloski2012"
+literal "false"
+
+\end_inset
+
+,
+ the term 
+\shape italic
+feasible 
+\shape default
+VHC is used,
+ or simply VHC.
+ A common requirement across all these publications is that the entire set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ be controlled invariant.
+ Moreover,
+ the authors underline,
+ that the loss of controlled invariance implies that the VHC is 
+\shape italic
+not feasible
+\shape default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Chapter 2"
+key "Jankuloski2012"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In this work,
+ we continue the discussion on the definition of VHCs.
+ We argue that requiring the set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ to be 
+\series bold
+controlled invariant is overly restrictive
+\series default
+ in the context of motion planning,
+ as it excludes a broad class of viable solutions.
+ While the existence of the manifold may be beneficial in certain applications – such as the design of stabilizing feedback controllers – it is by no means a necessary condition.
+ In particular,
+ the lack of controlled invariance does not necessarily imply that trajectory stabilizability is impossible.
+ Therefore,
+ we find the usage of the term 
+\shape italic
+feasible
+\shape default
+ to describe only a narrow class of VHCs somewhat misleading.
+ If one follows this terminology,
+ it would imply that a “
+\shape italic
+non-feasible
+\shape default
+” VHC could nevertheless be used to generate feasible trajectories – an apparent contradiction.
+\end_layout
+
+\begin_layout Standard
+In Section [...],
+ we examine an example of a periodic trajectory of the PVTOL system and prove that there exists no VHC satisfying Definition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "def:VHC"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ associated with this trajectory.
+ Nevertheless,
+ we show that the trajectory is stabilizable.
+ In Section [...],
+ we formulate a theorem that establishes the necessity of the failure of the controlled invariance property for a certain class of solutions.
+\end_layout
+
+\begin_layout Subsection*
+Notation
+\end_layout
+
+\begin_layout Standard
+In accordance with 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Isidori-1995"
+literal "false"
+
+\end_inset
+
+,
+ we introduce the following conventions:
+\end_layout
+
+\begin_layout Itemize
+The directional derivative of a smooth function 
+\begin_inset Formula $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
+\end_inset
+
+ along a vector field 
+\begin_inset Formula $f\in T\mathbb{R}^{n}$
+\end_inset
+
+ is denoted by 
+\begin_inset Formula $L_{f}h\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}f\left(q\right)\in\mathbb{R}^{k}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The higher-order directional derivatives are defined recursively as:
+ 
+\begin_inset Formula $L_{f}^{k}h\left(q\right)\equiv L_{f}L_{f}^{k-1}h\left(q\right)\in\mathbb{R}^{k}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The jacobian matrix of a function 
+\begin_inset Formula $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
+\end_inset
+
+ is denoted by 
+\begin_inset Formula $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}\in\mathbb{R}^{k\times n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The image (column space) of a matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ is denoted by 
+\begin_inset Formula $\mathrm{Im}A$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+The kernel of a matrix 
+\begin_inset Formula $A\in\mathbb{R}^{n\times m}$
+\end_inset
+
+ is defined as 
+\begin_inset Formula $A$
+\end_inset
+
+:
+ 
+\begin_inset Formula $\ker A\equiv\left\{ x\in\mathbb{R}^{m}\mid Ax=0\right\} .$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:pvtol-trajectory"
+
+\end_inset
+
+ Motivating Example:
+ Motion Planning for PVTOL Aircraft 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fig/pvtol_gen_coords.pdf
+	width 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pvtol-gen-coords"
+
+\end_inset
+
+ PVTOL aircraft generalized coordinates.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let us consider the Planar Vertical Take-Off and Landing (PVTOL) aircraft
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hauser-1992-pvtol"
+literal "false"
+
+\end_inset
+
+,
+ the dynamics of which are described by the system of ODEs:
+\begin_inset Formula 
+\begin{equation}
+\ddot{x}=-\sin\psi u_{1},\quad\ddot{z}=\cos\psi u_{1}-1,\quad\ddot{\psi}=u_{2}\label{eq:pvtol-dynamics}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $q=\left(x,z,\psi\right)^{\top}\in\mathbb{R}^{3}$
+\end_inset
+
+ are generalized coordinates and 
+\begin_inset Formula $u=\left(u_{1},u_{2}\right)^{\top}\in\mathbb{R}^{2}$
+\end_inset
+
+ are control inputs are assumed can be of both signs.
+ The coordinates 
+\begin_inset Formula $x,z$
+\end_inset
+
+ specify the position of aircraft's center of mass,
+ while the angle 
+\begin_inset Formula $\psi$
+\end_inset
+
+ defines its attitude as in Fig.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pvtol-gen-coords"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ It is straightforward to verify that the PVTOL dynamics are of Euler-Lagrange type,
+ with the following matrices:
+\begin_inset Formula 
+\[
+M=I_{3\times3},\quad C=0_{3\times3},
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+G=\left(\begin{array}{c}
+0\\
+1\\
+0
+\end{array}\right)\quad\text{and}\quad B\left(q\right)=\left(\begin{array}{cc}
+-\sin\psi & 0\\
+\cos\psi & 0\\
+0 & 1
+\end{array}\right).
+\]
+
+\end_inset
+
+In this notation,
+ the system can be rewritten compactly as
+\begin_inset Formula 
+\[
+\ddot{q}=B\left(q\right)u-G,
+\]
+
+\end_inset
+
+which aligns with the general structure of Euler–Lagrange systems
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Tic-Toc Maneuver of PVTOL Aircraft
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fig/pvtol_tic_toc_schematically.pdf
+	width 7.5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pvtol-tic-toc"
+
+\end_inset
+
+ PVTOL aircraft tic-toc maneuver.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let us consider two functions 
+\begin_inset Formula $q_{*}\left(t\right)\in C^{\omega},$
+\end_inset
+
+
+\begin_inset Formula $u_{*}\left(t\right)\in C^{\omega}$
+\end_inset
+
+ given by 
+\begin_inset Formula 
+\begin{align}
+q_{*}\left(t\right) & =\left(\begin{array}{c}
+\sin t\\
+-\frac{1}{2}\sin^{2}t\\
+\frac{\pi}{2}-\arctan\left(2\sin t\right)
+\end{array}\right)\quad\text{and}\label{eq:ref-traj}\\
+u_{*}\left(t\right) & =\left(\begin{array}{c}
+\sin t\sqrt{4\sin^{2}t+1}\\
+\frac{12\sin t+2\sin3t}{\left(3-2\cos2t\right)^{2}}
+\end{array}\right).\nonumber 
+\end{align}
+
+\end_inset
+
+It can be readily confirmed by direct substitution that the pair 
+\begin_inset Formula $\left(q_{*}\left(t\right),u_{*}\left(t\right)\right)$
+\end_inset
+
+ satisfies the PVTOL dynamics
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pvtol-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ The trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+ represent the so-called 
+\shape italic
+tic-toc
+\shape default
+ aerobatic maneuver of the aircraft,
+ which is schematically illustrated in Fig.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pvtol-tic-toc"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ In the following,
+ we show that 
+\series bold
+no VHC
+\series default
+ satisfying Definition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "def:VHC"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ can be associated with this trajectory.
+\end_layout
+
+\begin_layout Subsection
+The Absence of Controlled Invariance
+\end_layout
+
+\begin_layout Standard
+Suppose,
+ to the contrary,
+ that there exists a function 
+\begin_inset Formula $h:C^{2}\left(\mathbb{R}^{3}\to\mathbb{R}^{2}\right)$
+\end_inset
+
+ satisfying the conditions:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $h\left(q_{*}\left(t\right)\right)\equiv0$
+\end_inset
+
+ for all 
+\begin_inset Formula $t$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathrm{rank}\,dh\left(q\right)=2$
+\end_inset
+
+ for all 
+\begin_inset Formula $q$
+\end_inset
+
+ from 
+\begin_inset Formula $h^{-1}\left(0\right)$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Itemize
+the set
+\begin_inset Formula 
+\[
+\Gamma\equiv\left\{ \left(q,\dot{q}\right)\in\mathbb{R}^{6}\mid h\left(q\right)=0\,\text{and}\,L_{\dot{q}}h\left(q\right)=0\right\} 
+\]
+
+\end_inset
+
+ is a controlled invariant manifold.
+\end_layout
+
+\begin_layout Standard
+As discussed in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Consolini-2018"
+literal "false"
+
+\end_inset
+
+,
+ the set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+,
+ is a manifold of dimension two,
+ provided that 
+\begin_inset Formula $\mathrm{rank}\,dh\left(q\right)=2$
+\end_inset
+
+.
+ This manifold represents the tangent bundle 
+\begin_inset Formula $\Gamma=T\mathcal{C}$
+\end_inset
+
+,
+ where the base space 
+\begin_inset Formula $\mathcal{C}$
+\end_inset
+
+ is given by 
+\begin_inset Formula $\mathcal{C}=\left\{ q\in\mathbb{R}^{3}\mid\exists\,t:q=q_{*}\left(t\right)\right\} ,$
+\end_inset
+
+ which corresponds to the image of the trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To demonstrate the controlled invariance of 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+,
+ we analyze the dynamics of the variable 
+\begin_inset Formula $y=h\left(q\right)$
+\end_inset
+
+,
+ which are given by 
+\begin_inset Formula 
+\begin{align}
+\dot{y} & =L_{\dot{q}}h\left(q\right)\nonumber \\
+\ddot{y} & =dh\left(q\right)\left(B\left(q\right)u-G\right)+L_{\dot{q}}^{2}h\left(q\right).\label{eq:ddot_y}
+\end{align}
+
+\end_inset
+
+According to
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Chapter 6"
+key "Isidori-1995"
+literal "false"
+
+\end_inset
+
+,
+ the set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is controlled invariant if and only if for every 
+\begin_inset Formula $\left(q,\dot{q}\right)\in\Gamma$
+\end_inset
+
+,
+ there exists a smooth mapping 
+\begin_inset Formula $u:\Gamma\to\mathbb{R}^{2}$
+\end_inset
+
+ such that the right hand side of the equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ddot_y"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is identically zero.
+ This implies,
+ that the following system of linear algebraic equations in 
+\begin_inset Formula $u$
+\end_inset
+
+ must be solvable for all 
+\begin_inset Formula $\left(q,\dot{q}\right)\in\Gamma$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+dh\left(q\right)B\left(q\right)u=dh\left(q\right)G-L_{\dot{q}}^{2}h\left(q\right).\label{eq:linsys-for-u}
+\end{equation}
+
+\end_inset
+
+Here,
+ two options are possible:
+\end_layout
+
+\begin_layout Enumerate
+The matrix 
+\begin_inset Formula $dh\left(q\right)B\left(q\right)$
+\end_inset
+
+ is of full rank.
+ In this case,
+ 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is controlled invariant for any bounded right-hand side.
+\end_layout
+
+\begin_layout Enumerate
+If the matrix 
+\begin_inset Formula $dh\left(q\right)B\left(q\right)$
+\end_inset
+
+ is not of full rank for some 
+\begin_inset Formula $q_{0}\in\mathcal{C}$
+\end_inset
+
+,
+ then there exists a nontrivial row vector 
+\begin_inset Formula $N$
+\end_inset
+
+ such that 
+\begin_inset Formula $Ndh\left(q\right)B\left(q\right)=0$
+\end_inset
+
+.
+ In this case,
+ the necessary condition of controlled invariance becomes
+\begin_inset Formula 
+\begin{equation}
+Ndh\left(q_{0}\right)G-NL_{\dot{q}}^{2}h\left(q_{0}\right)=0\quad\text{for all}\quad\dot{q}\in T_{q_{0}}\mathcal{C}.\label{eq:dq_constr}
+\end{equation}
+
+\end_inset
+
+Importantly,
+ the first term 
+\begin_inset Formula $Ndh\left(q_{0}\right)G$
+\end_inset
+
+ does not depend on 
+\begin_inset Formula $\dot{q}$
+\end_inset
+
+,
+ while the second is bilinear in 
+\begin_inset Formula $\dot{q}$
+\end_inset
+
+.
+ This implies,
+ that the only option to satisfy condition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dq_constr"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is for both terms to vanish:
+ 
+\begin_inset Formula $Ndh\left(q_{0}\right)G=0$
+\end_inset
+
+ and 
+\begin_inset Formula $NL_{\dot{q}}^{2}h\left(q_{0}\right)=0$
+\end_inset
+
+ for all 
+\begin_inset Formula $\dot{q}\in T_{q_{0}}\mathcal{C}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let us consider the point 
+\begin_inset Formula $q_{0}\in\mathcal{C}$
+\end_inset
+
+ given by:
+\begin_inset Formula 
+\[
+q_{0}=q_{*}\left(0\right)=\left(0,0,\frac{\pi}{2}\right)^{\top}.
+\]
+
+\end_inset
+
+At this point the velocity vector 
+\begin_inset Formula $\dot{q}_{0}=\dot{q}_{*}\left(0\right)=\left(1,0,-2\right)^{\top}\in T_{q_{0}}\mathcal{C}$
+\end_inset
+
+ lies in the image of the matrix
+\begin_inset Formula 
+\begin{align*}
+B\left(q_{0}\right) & =\left(\begin{array}{cc}
+-1 & 0\\
+0 & 0\\
+0 & 1
+\end{array}\right),
+\end{align*}
+
+\end_inset
+
+i.e.
+ 
+\begin_inset Formula $\dot{q}_{0}\in\mathrm{Im}\left[B\left(q_{0}\right)\right]$
+\end_inset
+
+.
+ The condition 
+\begin_inset Formula $h\left(q_{*}\left(t\right)\right)\equiv0$
+\end_inset
+
+ implies that the rows of 
+\begin_inset Formula $dh\left(q_{0}\right)$
+\end_inset
+
+ are orthogonal to 
+\begin_inset Formula $\dot{q}_{0}$
+\end_inset
+
+,
+ i.e.,
+ 
+\begin_inset Formula $dh\left(q_{0}\right)\dot{q}_{0}=0$
+\end_inset
+
+.
+ Consequently,
+ the matrix 
+\begin_inset Formula $dh\left(q_{0}\right)B\left(q_{0}\right)$
+\end_inset
+
+ cannot have full rank.
+ This implies the exstence of a row vector 
+\begin_inset Formula $N\in\mathbb{R}^{1\times2}\backslash\left\{ 0\right\} $
+\end_inset
+
+ such that 
+\begin_inset Formula $Ndh\left(q_{0}\right)B\left(q_{0}\right)=0$
+\end_inset
+
+.
+ Then,
+ in order for 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ to be controlled invariant,
+ the condition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dq_constr"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ must be satisfied.
+ Since the matrix 
+\begin_inset Formula $dh\left(q\right)$
+\end_inset
+
+ consists two of linear independent rows,
+ the row vector 
+\begin_inset Formula $Ndh\left(q_{0}\right)\in\mathbb{R}^{1\times3}$
+\end_inset
+
+ is nonzero.
+ Furthermore,
+ the orthogonal complement of this row vector is a two-dimensional linear space that coincides with 
+\begin_inset Formula $\mathrm{Im}\left[B\left(q_{0}\right)\right]$
+\end_inset
+
+.
+ Observing that the vector 
+\begin_inset Formula $G$
+\end_inset
+
+ does not lie in 
+\begin_inset Formula $\mathrm{Im}\left[B\left(q_{0}\right)\right]$
+\end_inset
+
+,
+ we conclude that 
+\begin_inset Formula $Ndh\left(q_{0}\right)G$
+\end_inset
+
+ is nonzero.
+ Therefore,
+ the equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dq_constr"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ can only hold for specific values of 
+\begin_inset Formula $\dot{q}$
+\end_inset
+
+,
+ which are 
+\begin_inset Formula $\dot{q}=\pm\dot{q}_{0}$
+\end_inset
+
+.
+ However,
+ if we consider 
+\begin_inset Formula $\dot{q}=0\in T_{q_{0}}\mathcal{Q}$
+\end_inset
+
+,
+ then the second term becomes zero and the equality
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dq_constr"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ violates.
+ This contradicts the requirement that the equaility
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dq_constr"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ must hold for all 
+\begin_inset Formula $\dot{q}$
+\end_inset
+
+ from the tangent space 
+\begin_inset Formula $T_{q_{0}}\mathcal{Q}$
+\end_inset
+
+.
+ Therefore,
+ we conclude that the set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is 
+\series bold
+not a controlled invariant manifold
+\series default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+This general result can also be verified by the reader through direct computation using a specific candidate VHC,
+ such as 
+\begin_inset Formula 
+\[
+h\left(q\right)=\left(\begin{array}{c}
+\psi-\frac{\pi}{2}+\arctan\left(2x\right)\\
+z+\frac{1}{2}x^{2}
+\end{array}\right)
+\]
+
+\end_inset
+
+or any other function 
+\begin_inset Formula $h\left(q\right)$
+\end_inset
+
+ satisfying 
+\begin_inset Formula $h\left(q_{*}\left(t\right)\right)\equiv0$
+\end_inset
+
+ and having 
+\begin_inset Formula $\mathrm{rank}\,dh\left(q\right)=2$
+\end_inset
+
+ on 
+\begin_inset Formula $\mathcal{C}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Trajectory Stabilizability
+\end_layout
+
+\begin_layout Standard
+The result above naturally rises the question about the realizability of such a trajectory on a physical setup in presence of model uncertanties.
+ One may doubt,
+ that the strong requirement for passing the system through the given configuration 
+\begin_inset Formula $q_{0}$
+\end_inset
+
+ with specific velocity only,
+ seems improbable.
+ On the other hand,
+ this requirement arises when the specific VHC is imposed.
+ 
+\end_layout
+
+\begin_layout Standard
+To demonstrate the existence of orbitally stabilizing feedback,
+ we suggest considering the transverse linearization approach
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Banaszuk-1995,Surov-2020"
+literal "false"
+
+\end_inset
+
+.
+ According to this approach,
+ we introduce new coordinates in a local vicinity of the reference orbit
+\begin_inset Formula 
+\begin{align*}
+ & \tau:=\mathrm{atan2}\left(x,\dot{x}\right),\quad\rho_{1}:=z-z_{*}\left(\tau\right),\quad\rho_{2}:=\psi-\psi_{*}\left(\tau\right),\\
+ & \rho_{3}:=\dot{z}-\dot{z}_{*}\left(\tau\right),\quad\rho_{4}:=\dot{\psi}-\dot{\psi}_{*}\left(\tau\right)\\
+ & \rho_{5}:=\left(x-x_{*}\left(\tau\right)\right)\sin\tau+\left(\dot{x}-\dot{x}_{*}\left(\tau\right)\right)\cos\tau
+\end{align*}
+
+\end_inset
+
+and control input transformation 
+\begin_inset Formula 
+\[
+w:=u-u_{*}\left(\tau\right).
+\]
+
+\end_inset
+
+The variables 
+\begin_inset Formula $\rho\equiv\left(\rho_{1},\dots,\rho_{5}\right)^{\top}\in\mathbb{R}^{5}$
+\end_inset
+
+ play the role of transverse coordinates meaning that they vanish when phase space point achives the reference orbit.
+ The coordinate 
+\begin_inset Formula $\tau\in\left[-\pi,\pi\right)$
+\end_inset
+
+ represents projection of phase space point onto the reference trajectory.
+ It is easy to prove,
+ that the given transformation 
+\begin_inset Formula $\left(q,\dot{q}\right)\mapsto\left(\tau,\rho\right)$
+\end_inset
+
+ is diffeomorphic within a small tube around the orbit.
+ This implies the existence of inverse transformation 
+\begin_inset Formula $\left(q,\dot{q}\right)^{\top}=\beta\left(\rho,\tau\right)$
+\end_inset
+
+ and allows representing dynamics
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pvtol-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ in new coordinates as 
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\beta\left(\rho,\tau\right)}{\partial\left(\rho,\tau\right)}\left(\begin{array}{c}
+\dot{\rho}\\
+\dot{\tau}
+\end{array}\right)=\left(\begin{array}{c}
+\dot{q}\\
+B\left(q\right)u_{*}\left(\tau\right)-G+B\left(q\right)w
+\end{array}\right).\label{eq:transverse-dynamics-1}
+\end{equation}
+
+\end_inset
+
+Next,
+ we substitute into the right hand side of
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:transverse-dynamics-1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ the inverse transformation 
+\begin_inset Formula $\left(q,\dot{q}\right)^{\top}=\beta\left(\rho,\tau\right)$
+\end_inset
+
+ and solve for 
+\begin_inset Formula $\dot{\rho}$
+\end_inset
+
+ and 
+\begin_inset Formula $\dot{\tau}$
+\end_inset
+
+,
+ provided that the jacobian matrix is invertable.
+ If divide 
+\begin_inset Formula $\dot{\rho}$
+\end_inset
+
+ by 
+\begin_inset Formula $\dot{\tau}$
+\end_inset
+
+,
+ then we will obtain,
+ according to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Banaszuk-1995"
+literal "false"
+
+\end_inset
+
+,
+ the transverse dynamics in the form of a general nonlinear system
+\begin_inset Formula 
+\begin{equation}
+\frac{d\rho}{d\tau}=f\left(\rho,\tau,w\right).\label{eq:transverse-dynamics-2}
+\end{equation}
+
+\end_inset
+
+The linearization of
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:transverse-dynamics-2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ by 
+\begin_inset Formula $\rho$
+\end_inset
+
+ and 
+\begin_inset Formula $w$
+\end_inset
+
+ yields 
+\begin_inset Formula 
+\[
+\frac{d\rho}{d\tau}=A\left(\tau\right)\rho+B\left(\tau\right)w+O\left(\tau,\rho,w\right),
+\]
+
+\end_inset
+
+where the function 
+\begin_inset Formula $O\left(\tau,\rho,w\right)$
+\end_inset
+
+ contains bilinear and higher-order terms with 
+\begin_inset Formula $\rho$
+\end_inset
+
+ and 
+\begin_inset Formula $w$
+\end_inset
+
+;
+ the matrix functions 
+\begin_inset Formula 
+\begin{align*}
+A\left(\tau\right) & :=\left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial\rho}\right)_{\rho=0,w=0}\quad\text{and}\quad\\
+B\left(\tau\right) & :=\left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial w}\right)_{\rho=0,w=0}.
+\end{align*}
+
+\end_inset
+
+are periodic with period 
+\begin_inset Formula $2\pi$
+\end_inset
+
+.
+ Based on the arguments in
+\begin_inset space ~
+\end_inset
+
+[Jakubovich] we conclude that controllability of the LTV system 
+\begin_inset Formula 
+\begin{equation}
+\frac{d\bar{\rho}}{d\tau}=A\left(\tau\right)\bar{\rho}+B\left(\tau\right)w\label{eq:linearized-transverse-dynamics}
+\end{equation}
+
+\end_inset
+
+over a period implies orbital stabilizability of the trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+.
+ Moreover,
+ a linear feedback 
+\begin_inset Formula $w\left(\tau,\rho\right)=K\left(\tau\right)\rho$
+\end_inset
+
+ with 
+\begin_inset Formula $2\pi$
+\end_inset
+
+-periodic matrix of feedback coefficients 
+\begin_inset Formula $K\left(\tau\right):\mathbb{R}\to\mathbb{R}^{2\times5}$
+\end_inset
+
+ stabilizing the system
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:linearized-transverse-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ allows to construct the feedback for the nonlinear system
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pvtol-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ as 
+\begin_inset Formula 
+\begin{equation}
+u=u_{*}\left(\tau\right)+K\left(\tau\right)\rho.\label{eq:nonlinear-control}
+\end{equation}
+
+\end_inset
+
+This feedback,
+ according to [Leonov],
+ provides asymptotic orbital stability to the trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Numerical Analysis
+\end_layout
+
+\begin_layout Standard
+We performed the numerical analysis of the linearized transverse dynamics
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:linearized-transverse-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ The controllability Gramian
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Proposition 5.2"
+key "Kalman-1960-optimal-control"
+literal "false"
+
+\end_inset
+
+ over period has the following eigenvalues
+\begin_inset Formula 
+\[
+\mathrm{eigvals}W\left(0,2\pi\right):\quad\left\{ 758.,\,93.0,\,10.7,\,1.51,\,0.195\right\} 
+\]
+
+\end_inset
+
+ensuring controllability of the system.
+ The matrix 
+\begin_inset Formula $K\left(\tau\right)$
+\end_inset
+
+ is found with the help of LQR approach
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gusev-2007-LMI"
+literal "false"
+
+\end_inset
+
+ using the weighted matrices 
+\begin_inset Formula $R=I_{2\times2}$
+\end_inset
+
+ and 
+\begin_inset Formula $Q=I_{5\times5}$
+\end_inset
+
+.
+ As seen,
+ the eigenvalues of the monodtromy matrix of the closed loop system 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula 
+\begin{align*}
+\mathrm{eigvals}F\left(T\right): & \left\{ 1.54\cdot10^{-2},\quad4.24\cdot10^{-3},\quad4.48\cdot10^{-3},\right.\\
+ & \left.-1.30\cdot10^{-3}\pm2.80\cdot10^{-3}\right\} 
+\end{align*}
+
+\end_inset
+
+are 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+inside the unit circle,
+ what ensures exponential stability.
+ To demonstrate effectiveness of the proposed control law
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pvtol-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ we performed computer simulations of the closed loop nonlinear system with initial state 
+\begin_inset Formula $q_{1}=\left(0.1,0.0,0.0\right)^{\top}$
+\end_inset
+
+,
+ 
+\begin_inset Formula $\dot{q}_{1}=0_{3}$
+\end_inset
+
+ and integration timestep 
+\begin_inset Formula $10$
+\end_inset
+
+ msec.
+ The results of simulation are presented in Fig.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pvtol-sim"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ As seen,
+ the sample solution converges to the desire trajectory and all the singals are smooth and bounded functions.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fig/pvtol_phase_coords.pdf
+	width 8.5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pvtol-sim"
+
+\end_inset
+
+ Closed loop system simulation results.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fig/pvtol_transverse.pdf
+	width 8.5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pvtol-transverse"
+
+\end_inset
+
+ Transverse coordinates behavior and control inputs.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:non-regular-vhc"
+
+\end_inset
+
+ Non-regular Virtual Holonomic Constraints
+\end_layout
+
+\begin_layout Standard
+In this section,
+ we aim to show that the trajectory presented above is not an isolated exception,
+ but rather a typical example within a broad class of admitable solutions.
+ To this end,
+ we briefly remind the mothod of motions planning based on VHCs
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Shiriaev-2005-constructive-tool,Shiriaev-2006-periodic-planning"
+literal "false"
+
+\end_inset
+
+.
+ As known,
+ according to 
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Proposition 2"
+key "Shiriaev-2005-constructive-tool"
+literal "false"
+
+\end_inset
+
+,
+ dynamics of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ with imposed VHC 
+\begin_inset Formula $q=\phi\left(\theta\right)$
+\end_inset
+
+ are determined by the equation
+\begin_inset Formula 
+\begin{equation}
+\alpha\left(\theta\right)\ddot{\theta}+\beta\left(\theta\right)\dot{\theta}^{2}+\gamma\left(\theta\right)=0\label{eq:alpha-beta-gamma}
+\end{equation}
+
+\end_inset
+
+where the scalar coefficients 
+\begin_inset Formula $\alpha\left(\theta\right),\beta\left(\theta\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma\left(\theta\right)$
+\end_inset
+
+ are defined as
+\begin_inset Formula 
+\begin{align*}
+\alpha\left(\theta\right) & =B_{\perp}\left(\phi\left(\theta\right)\right)M\left(\phi\left(\theta\right)\right)\phi'\left(\theta\right),\\
+\beta\left(\theta\right) & =B_{\perp}\left(\phi\left(\theta\right)\right)M\left(\phi\left(\theta\right)\right)\phi''\left(\theta\right)\\
+ & \quad+B_{\perp}\left(\phi\left(\theta\right)\right)C\left(\phi\left(\theta\right),\phi'\left(\theta\right)\right)\phi'\left(\theta\right),\\
+\gamma\left(\theta\right) & =B_{\perp}\left(\phi\left(\theta\right)\right)G\left(\phi\left(\theta\right)\right)
+\end{align*}
+
+\end_inset
+
+and matrix 
+\begin_inset Formula $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n}\backslash\left\{ 0\right\} $
+\end_inset
+
+ is a left annihilator of 
+\begin_inset Formula $B\left(q\right)$
+\end_inset
+
+.
+ For the PVTOL system in section above,
+ we used the VHC
+\begin_inset Formula 
+\begin{equation}
+\phi\left(\theta\right)=\left(\theta,-\frac{1}{2}\theta^{2},\frac{\pi}{2}-\arctan2\theta\right)^{\top}\label{eq:pvtol-vhc}
+\end{equation}
+
+\end_inset
+
+and matrix 
+\begin_inset Formula $B_{\perp}\left(q\right)=\left(\cos\psi,\sin\psi,0\right)$
+\end_inset
+
+,
+ which result in the reduced dynamics:
+\begin_inset Formula 
+\begin{equation}
+\theta\ddot{\theta}-\dot{\theta}^{2}+1=0.\label{eq:pvtol-reduced-dynamics}
+\end{equation}
+
+\end_inset
+
+A reader can verify by direct substitution that the piecewise function 
+\begin_inset Formula 
+\begin{equation}
+\theta_{*}\left(t\right)=\begin{cases}
+\theta_{1}\sin\frac{t}{\theta_{1}} & t\in\left[\theta_{1}\pi,0\right)\\
+\theta_{2}\sin\frac{t}{\theta_{2}} & t\in\left[0,\theta_{2}\pi\right]
+\end{cases}\label{eq:piecewise-solution-pvtol}
+\end{equation}
+
+\end_inset
+
+with parameters 
+\begin_inset Formula $\theta_{1}<0<\theta_{2}$
+\end_inset
+
+,
+ is twice continuously differentiable on the interval 
+\begin_inset Formula $t\in\left[\theta_{1}\pi,\theta_{2}\pi\right]$
+\end_inset
+
+ and satisfies equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Selecting 
+\begin_inset Formula $\theta_{1}=-1$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}=1$
+\end_inset
+
+,
+ we obtain the solution 
+\begin_inset Formula $\theta_{*}\left(t\right)=\sin t$
+\end_inset
+
+ and then trajectory 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+ presented in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ref-traj"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+As seen,
+ equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pvtol-reduced-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ exhibits a singularity at 
+\begin_inset Formula $\theta=0$
+\end_inset
+
+,
+ thereby violating requirements of the Picard-Lindelöf existence theorem.
+ Nevertheless,
+ as shown in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Theorem 1"
+key "Surov-2018"
+literal "false"
+
+\end_inset
+
+,
+ smooth solutions to reduced dynamics with isolated singularities may still exist,
+ provided that certain additional conditions are satisfied by the coefficients 
+\begin_inset Formula $\alpha\left(\theta\right),\beta\left(\theta\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma\left(\theta\right)$
+\end_inset
+
+.
+ We briefly recall the formulation of this existence
+\end_layout
+
+\begin_layout Theorem
+\begin_inset CommandInset label
+LatexCommand label
+name "thm:singular-solutions-existence"
+
+\end_inset
+
+ Let us consider the differential equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:alpha-beta-gamma"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ on an open interval 
+\begin_inset Formula $\theta\in I\subset\mathbb{R}$
+\end_inset
+
+.
+ Suppose the following conditions hold:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+the coefficients 
+\begin_inset Formula $\alpha\left(\theta\right),\beta\left(\theta\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma\left(\theta\right)$
+\end_inset
+
+ are smooth functions:
+ 
+\begin_inset Formula $\alpha\left(\theta\right)\in C^{3}\left(I\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta\left(\theta\right),\gamma\left(\theta\right)\in C^{2}\left(I\right)$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+the function 
+\begin_inset Formula $\alpha\left(\theta\right)$
+\end_inset
+
+ has a unique zero on the interval 
+\begin_inset Formula $\exists!\,\theta_{s}\in I:\alpha\left(\theta_{s}\right)=0$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+the following inequalities hold true 
+\begin_inset Formula 
+\[
+\alpha'\left(\theta_{s}\right)>0,\quad\gamma\left(I\right)>0,\quad\frac{\beta\left(\theta_{s}\right)}{\alpha'\left(\theta_{s}\right)}<-\frac{1}{2}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then,
+ for any real values 
+\begin_inset Formula $\theta_{1},\theta_{2}\in I$
+\end_inset
+
+,
+ 
+\begin_inset Formula $\theta_{1}<\theta_{s}<\theta_{2}$
+\end_inset
+
+,
+ and 
+\begin_inset Formula $\dot{\theta}_{1}\geq0$
+\end_inset
+
+,
+ 
+\begin_inset Formula $\dot{\theta}_{2}\geq0$
+\end_inset
+
+ there exists the smooth function 
+\begin_inset Formula $\theta_{*}\left(t\right)\in C^{2}$
+\end_inset
+
+ defined on the interval 
+\begin_inset Formula $\left[t_{1},t_{2}\right]$
+\end_inset
+
+ satisfying the equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:alpha-beta-gamma"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ and the boundary conditions 
+\begin_inset Formula 
+\begin{align}
+ & \theta_{*}\left(t_{1}\right)=\theta_{1},\quad\dot{\theta}_{*}\left(t_{1}\right)=\dot{\theta}_{1},\label{eq:piecewise-solution-general}\\
+\exists t_{s}\in\left(t_{1},\infty\right):\quad & \theta_{*}\left(t_{s}\right)=\theta_{s},\quad\dot{\theta}_{*}\left(t_{s}\right)=\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)},\nonumber \\
+\exists t_{2}\in\left(t_{s},\infty\right):\quad & \theta_{*}\left(t_{2}\right)=\theta_{2},\quad\dot{\theta}_{*}\left(t_{2}\right)=\dot{\theta}_{2}.\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Remark
+\begin_inset CommandInset label
+LatexCommand label
+name "rem:periodic-solitions"
+
+\end_inset
+
+ Due to the symmetry of equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:alpha-beta-gamma"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ with respect to time inverse 
+\begin_inset Formula $t\mapsto-t$
+\end_inset
+
+,
+ the function 
+\begin_inset Formula $\theta_{*}\left(-t\right)$
+\end_inset
+
+ is also a solution to this equation.
+ The function 
+\begin_inset Formula $\theta_{*}\left(-t\right)$
+\end_inset
+
+ passes through the phase-space point 
+\begin_inset Formula $\theta=\theta_{s}$
+\end_inset
+
+ and 
+\begin_inset Formula $\dot{\theta}=-\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}$
+\end_inset
+
+.
+ If select 
+\begin_inset Formula $\dot{\theta}_{1}=\dot{\theta}_{2}=0$
+\end_inset
+
+,
+ then concatenating two functions 
+\begin_inset Formula $\theta_{*}\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{*}\left(2t_{2}-t\right)$
+\end_inset
+
+,
+ we obtain a periodic solution with period 
+\begin_inset Formula $2t_{2}-2t_{1}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It is easy to see,
+ that reduced dynamics
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pvtol-reduced-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ satisfy conditions of Theorem
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "thm:singular-solutions-existence"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ for 
+\begin_inset Formula $I=\mathbb{R}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{s}=0$
+\end_inset
+
+.
+ The solution
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:piecewise-solution-pvtol"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ corresponds to 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:piecewise-solution-general"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ if take 
+\begin_inset Formula $t_{1}=\frac{\pi\theta_{1}}{2}$
+\end_inset
+
+,
+ 
+\begin_inset Formula $t_{2}=\frac{\pi\theta_{2}}{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{s}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We propose referring to a VHC that results in singular reduced dynamics as a 
+\series bold
+non-regular VHC
+\series default
+.
+ Typically – though not necessary – the set 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ associated with a non-regular VHC 
+\begin_inset Formula $q=\phi\left(\theta\right)$
+\end_inset
+
+ loses controlled invariance at the configuration 
+\begin_inset Formula $q_{s}=\phi\left(\theta_{s}\right)$
+\end_inset
+
+ corresponding to the singularity 
+\begin_inset Formula $\theta_{s}$
+\end_inset
+
+.
+ This loss follows from Theorem
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "thm:singular-solutions-existence"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ which states that any solution passing through 
+\begin_inset Formula $\theta_{s}$
+\end_inset
+
+ must have the specific velocity 
+\begin_inset Formula $\dot{\theta}_{s}=\pm\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}$
+\end_inset
+
+.
+ Consequently,
+ at the configuration 
+\begin_inset Formula $q_{s},$
+\end_inset
+
+ the tangent space 
+\begin_inset Formula $T_{q_{0}}\mathcal{C}$
+\end_inset
+
+ collapses to the pair of vectors 
+\begin_inset Formula $\left\{ \pm\phi'\left(\theta_{s}\right)\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}\right\} $
+\end_inset
+
+,
+ thus breaking the local manifold structure.
+ 
+\end_layout
+
+\begin_layout Standard
+It is important to note that the singularity presented in Theorem
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "thm:singular-solutions-existence"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is not removable and cannot be eliminated through a coordinate change and various representations of VHC.
+ To demonstrate this,
+ consider the following
+\end_layout
+
+\begin_layout Lemma
+\begin_inset CommandInset label
+LatexCommand label
+name "lem:singularity-necessity"
+
+\end_inset
+
+ Let 
+\begin_inset Formula $q_{*}\left(t\right),u_{*}\left(t\right)$
+\end_inset
+
+ be a smooth solution to the mechanical system
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:lag-sys"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Suppose that,
+ at some time 
+\begin_inset Formula $t_{s}$
+\end_inset
+
+,
+ the trajectory 
+\begin_inset Formula $q^{*}\left(t\right)$
+\end_inset
+
+ satisfies 
+\begin_inset Formula 
+\begin{align}
+\exists t_{s} & :\,\dot{q}_{*}\left(t_{s}\right)\ne0\quad\text{and}\nonumber \\
+ & B_{\perp}\left(q_{*}\left(t_{s}\right)\right)M\left(q_{*}\left(t_{s}\right)\right)\dot{q}_{*}\left(t_{s}\right)=0,\label{eq:singularity-condition}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n}\backslash\left\{ 0\right\} $
+\end_inset
+
+ is a left annihilator of 
+\begin_inset Formula $B\left(q\right)$
+\end_inset
+
+.
+ Then the reduced dynamics
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:alpha-beta-gamma"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ corresponding to 
+\series bold
+any
+\series default
+ smooth parametrization 
+\begin_inset Formula $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+\end_inset
+
+ will necessarily satisfy
+\begin_inset Formula 
+\begin{equation}
+\alpha\left(\theta_{s}\right)=0,\quad\text{where}\quad\theta_{s}\equiv\theta^{*}\left(t_{s}\right).\label{eq:alpha-eq-zero}
+\end{equation}
+
+\end_inset
+
+If,
+ in addition,
+ 
+\begin_inset Formula $B_{\perp}\left(q_{*}\left(t_{s}\right)\right)G\left(q_{*}\left(t_{s}\right)\right)\ne0$
+\end_inset
+
+,
+ then the reduced dynamics exhibit a non-removable singularity at 
+\begin_inset Formula $\theta_{s}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+We substitute the expressions 
+\begin_inset Formula 
+\[
+q_{*}\left(t_{s}\right)=\phi\left(\theta_{*}\left(t_{s}\right)\right)\quad\text{and}\quad\dot{q}_{*}\left(t_{s}\right)=\phi'\left(\theta_{*}\left(t_{s}\right)\right)\dot{\theta}_{*}\left(t_{s}\right)
+\]
+
+\end_inset
+
+into condition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:singularity-condition"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ This yields 
+\begin_inset Formula 
+\[
+\underbrace{B_{\perp}\left(\phi\left(\theta_{*}\left(t_{s}\right)\right)\right)M\left(\phi\left(\theta_{*}\left(t_{s}\right)\right)\right)\phi'\left(\theta_{*}\left(t_{s}\right)\right)}_{=\alpha\left(\theta_{s}\right)}\dot{\theta}_{*}\left(t_{s}\right)=0.
+\]
+
+\end_inset
+
+Assuming that 
+\begin_inset Formula $\phi\left(\theta\right)$
+\end_inset
+
+ is smooth and 
+\begin_inset Formula $\phi'\left(\theta_{*}\left(t_{s}\right)\right)\dot{\theta}_{*}\left(t_{s}\right)\ne0$
+\end_inset
+
+,
+ it follows that 
+\begin_inset Formula $\dot{\theta}_{*}\left(t_{s}\right)\ne0$
+\end_inset
+
+ and therefore 
+\begin_inset Formula $\alpha\left(\theta_{s}\right)=0$
+\end_inset
+
+.
+ Now,
+ since 
+\begin_inset Formula $B_{\perp}\left(q_{*}\left(t_{s}\right)\right)G\left(q_{*}\left(t_{s}\right)\right)\ne0$
+\end_inset
+
+ we conclude that 
+\begin_inset Formula $\gamma\left(\theta_{s}\right)\ne0$
+\end_inset
+
+.
+ This implies that the right hand side of the equation 
+\begin_inset Formula 
+\[
+\ddot{\theta}=-\frac{\beta\left(\theta\right)}{\alpha\left(\theta\right)}\dot{\theta}^{2}-\frac{\gamma\left(\theta\right)}{\alpha\left(\theta\right)}
+\]
+
+\end_inset
+
+is not Lipschitz continuous in a neighborhood of 
+\begin_inset Formula $\theta_{s}$
+\end_inset
+
+.
+ Hence the singularity at 
+\begin_inset Formula $\theta{}_{s}$
+\end_inset
+
+ cannot be eliminated.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In a geometrical perspective,
+ Lemma
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lem:singularity-necessity"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ postulates that any solution 
+\begin_inset Formula $q_{*}\left(t\right)$
+\end_inset
+
+ passing through 
+\begin_inset Formula $q_{s}=q_{*}\left(t_{s}\right)$
+\end_inset
+
+ with tangent vector 
+\begin_inset Formula $\dot{q}_{*}\left(t\right)\in\mathrm{Im}\left[M^{-1}\left(q_{s}\right)B\left(q_{s}\right)\right]\backslash\left\{ 0\right\} $
+\end_inset
+
+ will lead to singularity in reduced dynamics with necessity.
+ Hence,
+ in most cases,
+ the trajectory 
+\begin_inset Formula $q_{*}\left(t_{s}\right)$
+\end_inset
+
+ does not admit VHC 
+\begin_inset Formula $h\left(q_{*}\left(t_{s}\right)\right)=0$
+\end_inset
+
+ satisfying Definition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "def:VHC"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection*
+VHCs for the PVTOL Aircraft
+\end_layout
+
+\begin_layout Standard
+To explore the set of trajectories violating VHC regularity of the PVTOL aircraft we suggest considering the following VHC
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula 
+\begin{equation}
+\phi\left(\theta\right)=q_{s}+B\left(q_{s}\right)\left(\begin{array}{c}
+k_{1}\\
+k_{2}
+\end{array}\right)\theta+\frac{k_{3}}{2}B_{\perp}^{\top}\left(q_{s}\right)\theta^{2}\label{eq:pvtol-vhc-poly}
+\end{equation}
+
+\end_inset
+
+with parameters 
+\begin_inset Formula $q_{s}\equiv\left(x_{s},z_{s}\psi_{s}\right)^{\top}$
+\end_inset
+
+,
+ 
+\begin_inset Formula $k_{1},k_{2},k_{3}\in\mathbb{R}$
+\end_inset
+
+ and matrix 
+\begin_inset Formula $B_{\perp}\left(q_{s}\right)=\left(\cos\psi_{s},\sin\psi_{s},0\right)$
+\end_inset
+
+.
+ As seen,
+ the reduced dynamics 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula 
+\begin{align}
+ & \alpha\left(\theta\right)\ddot{\theta}+\beta\left(\theta\right)\dot{\theta}^{2}+\gamma\left(\theta\right)=0,\quad\text{with}\label{eq:alpha-beta-gamma-poly-vhc}\\
+ & \alpha\left(\theta\right)=k_{1}\sin\left(k_{2}\theta\right)+k_{3}\theta\cos\left(k_{2}\theta\right),\\
+ & \beta\left(\theta\right)=k_{3}\cos\left(k_{2}\theta\right),\quad\gamma\left(\theta\right)=\sin\left(\psi_{s}+k_{2}\theta\right)\nonumber 
+\end{align}
+
+\end_inset
+
+have singularity at 
+\begin_inset Formula $\theta=0$
+\end_inset
+
+,
+ what corresponds configuration 
+\begin_inset Formula $q_{s}$
+\end_inset
+
+ of the airctaft.
+ If apply Theorem
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "thm:singular-solutions-existence"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to the reduced dynamics,
+ we obtain the system of inequalities:
+ 
+\begin_inset Formula 
+\begin{align*}
+ & \alpha'\left(0\right)=k_{1}k_{2}+k_{3}>0,\quad\frac{\beta\left(0\right)}{\alpha'\left(0\right)}=\frac{k_{3}}{k_{1}k_{2}+k_{3}}<-\frac{1}{2},\\
+ & \gamma\left(\theta\right)=\sin\left(\psi_{s}+k_{2}\theta\right)>0.
+\end{align*}
+
+\end_inset
+
+This system is solvable on the interval 
+\begin_inset Formula $0<\psi_{s}<\pi$
+\end_inset
+
+ when 
+\begin_inset Formula $k_{3}<0$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{1}k_{2}>-k_{3}$
+\end_inset
+
+.
+ Then,
+ we conclude the existence of periodic solutions given Ramark
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "rem:periodic-solitions"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ In particular,
+ the PVTOL aircraft is able to perform periodic trajectory with a small amplitude around a configuration with attitude 
+\begin_inset Formula $\psi=\frac{\pi}{4}$
+\end_inset
+
+.
+ The simulations results for this trajectory are presented on
+\begin_inset space ~
+\end_inset
+
+[TODO youtube link].
+ One can prove,
+ using the arguments similar to given in Section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:pvtol-trajectory"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ that all of these trajectories also cannot be found if use Definition
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "def:VHC"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Concluding Remarks
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Freidovich-2007"
+literal "false"
+
+\end_inset
+
+ L.
+ Freidovich,
+ A.
+ Robertsson,
+ A.
+ Shiriaev,
+ R.
+ Johansson,
+ Periodic motions of the Pendubot via virtual holonomic constraints:
+ Theory and experiments,
+ Automatica,
+ Volume 44,
+ Issue 3,
+ 2008,
+ Pages 785-791,
+ ISSN 0005-1098,
+ https://doi.org/10.1016/j.automatica.2007.07.011.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Buss-2016"
+literal "false"
+
+\end_inset
+
+ B.
+ G.
+ Buss,
+ K.
+ A.
+ Hamed,
+ B.
+ A.
+ Griffin and J.
+ W.
+ Grizzle,
+ "Experimental results for 3D bipedal robot walking based on systematic optimization of virtual constraints," 2016 American Control Conference (ACC),
+ Boston,
+ MA,
+ USA,
+ 2016,
+ pp.
+ 4785-4792,
+ doi:
+ 10.1109/ACC.2016.7526111.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Surov-2015"
+literal "false"
+
+\end_inset
+
+ M.
+ Surov,
+ A.
+ Shiriaev,
+ L.
+ Freidovich,
+ S.
+ Gusev and L.
+ Paramonov,
+ "Case study in non-prehensile manipulation:
+ planning and orbital stabilization of one-directional rollings for the “Butterfly” robot," 2015 IEEE International Conference on Robotics and Automation (ICRA),
+ Seattle,
+ WA,
+ USA,
+ 2015,
+ pp.
+ 1484-1489,
+ doi:
+ 10.1109/ICRA.2015.7139385.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Consolini2010"
+literal "false"
+
+\end_inset
+
+ Luca Consolini,
+ Manfredi Maggiore,
+ Virtual Holonomic Constraints for Euler-Lagrange Systems,
+  IFAC Proceedings Volumes,
+ Volume 43,
+ Issue 14,
+ 2010,
+ Pages 1193-1198.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Jankuloski2012"
+literal "false"
+
+\end_inset
+
+ Dame Jankuloski,
+ Manfredi Maggiore,
+ Luca Consolini,
+ Further Results on Virtual Holonomic Constraints,
+ IFAC Proceedings Volumes,
+ Volume 45,
+ Issue 19,
+ 2012,
+ Pages 84-89.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Otsason-2019"
+literal "false"
+
+\end_inset
+
+ R.
+ Otsason and M.
+ Maggiore,
+ On the Generation of Virtual Holonomic Constraints for Mechanical Systems With Underactuation Degree One,
+ 2019 IEEE 58th Conference on Decision and Control (CDC),
+ Nice,
+ France,
+ 2019,
+ pp.
+ 8054-8060,
+ doi:
+ 10.1109/CDC40024.2019.9029201.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Consolini2011"
+literal "false"
+
+\end_inset
+
+ L.
+ Consolini and M.
+ Maggiore,
+ "On the swing-up of the Pendubot using virtual holonomic constrains," 2011 50th IEEE Conference on Decision and Control and European Control Conference,
+ Orlando,
+ FL,
+ USA,
+ 2011,
+ pp.
+ 4803-4808,
+ doi:
+ 10.1109/CDC.2011.6161512.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Consolini-2018"
+literal "false"
+
+\end_inset
+
+ Luca Consolini,
+ Alessandro Costalunga,
+ Manfredi Maggiore.
+ A coordinate-free theory of virtual holonomic constraints.
+ Journal of Geometric Mechanics,
+ 2018,
+ 10(4):
+ 467-502.
+ doi:
+ 10.3934/jgm.2018018
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Maggiore-2013"
+literal "false"
+
+\end_inset
+
+ M.
+ Maggiore and L.
+ Consolini,
+ "Virtual Holonomic Constraints for Euler–Lagrange Systems," in IEEE Transactions on Automatic Control,
+ vol.
+ 58,
+ no.
+ 4,
+ pp.
+ 1001-1008,
+ April 2013,
+ doi:
+ 10.1109/TAC.2012.2215538.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Isidori-1995"
+literal "false"
+
+\end_inset
+
+ A.
+\begin_inset space ~
+\end_inset
+
+Isidori,
+ Nonlinear Control Systems,
+ 3rd Edition,
+ Springer,
+ 1995,
+ Berlin.
+ http://dx.doi.org/10.1007/978-1-84628-615-5 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Hauser-1992-pvtol"
+literal "false"
+
+\end_inset
+
+ John Hauser,
+ Shankar Sastry,
+ George Meyer,
+ Nonlinear control design for slightly non-minimum phase systems:
+ Application to V/STOL aircraft,
+ Automatica,
+ Volume 28,
+ Issue 4,
+ 1992,
+ Pages 665-679,
+ ISSN 0005-1098,
+ https://doi.org/10.1016/0005-1098(92)90029-F.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Banaszuk-1995"
+literal "false"
+
+\end_inset
+
+ Andrzej Banaszuk,
+ John Hauser,
+ Feedback linearization of transverse dynamics for periodic orbits,
+ Systems & Control Letters,
+ Volume 26,
+ Issue 2,
+ 1995,
+ Pages 95-105,
+ ISSN 0167-6911,
+ https://doi.org/10.1016/0167-6911(94)00110-H.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Surov-2020"
+literal "false"
+
+\end_inset
+
+ M.
+ Surov,
+ S.
+ Gusev and L.
+ Freidovich,
+ "Constructing Transverse Coordinates for Orbital Stabilization of Periodic Trajectories," 2020 American Control Conference (ACC),
+ Denver,
+ CO,
+ USA,
+ 2020,
+ pp.
+ 836-841,
+ doi:
+ 10.23919/ACC45564.2020.9147533.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Khalil"
+literal "false"
+
+\end_inset
+
+ H.
+ K.
+ Khalil,
+ Nonlinear Systems,
+ 3rd Edition,
+ Prentice Hall,
+ Upper Saddle River,
+ 2002.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Surov-2018"
+literal "false"
+
+\end_inset
+
+ M.
+ Surov,
+ S.
+ V.
+ Gusev and A.
+ S.
+ Shiriaev,
+ New Results on Trajectory Planning for Underactuated Mechanical Systems with Singularities in Dynamics of a Motion Generator,
+ 2018 IEEE Conference on Decision and Control (CDC),
+ Miami,
+ FL,
+ USA,
+ 2018,
+ pp.
+ 6900-6905,
+ doi:
+ 10.1109/CDC.2018.8618669.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Levine"
+literal "false"
+
+\end_inset
+
+ W.
+ S.
+ Levine (Ed.),
+ The Control Handbook (three volume set) (2nd ed.),
+ 2011,
+ CRC Press,
+ https://doi.org/10.1201/9781315218694.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Kalman-1960-optimal-control"
+literal "false"
+
+\end_inset
+
+ R.E.
+ Kalman,
+ Contributions to the Theory of Optimal Control.
+ Matematica Mexicana,
+ 1960,
+ 5,
+ 102-119.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Yakubovich-1986"
+literal "false"
+
+\end_inset
+
+ Yakubovich,
+ V.A.(1986).
+ Linear-quadratic optimization problem and frequency theorem for periodic systems.
+ Siberian Math.
+ J.,
+ 27,
+ 181–200.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Gusev-2007-LMI"
+literal "false"
+
+\end_inset
+
+ Sergei V.
+ Gusev,
+ Anton S.
+ Shiriaev,
+ Leonid B.
+ Freidovich,
+ LMI Approach For Solving Periodic Matrix Riccati Equation,
+ IFAC Proceedings Volumes,
+ Volume 40,
+ Issue 14,
+ 2007,
+ Pages 254-256,
+ ISSN 1474-6670,
+ ISBN 9783902661302,
+ https://doi.org/10.3182/20070829-3-RU-4912.00044.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Shiriaev-2005-constructive-tool"
+literal "false"
+
+\end_inset
+
+ A.
+ Shiriaev,
+ J.
+ W.
+ Perram and C.
+ Canudas-de-Wit,
+ "Constructive tool for orbital stabilization of underactuated nonlinear systems:
+ virtual constraints approach," in IEEE Transactions on Automatic Control,
+ vol.
+ 50,
+ no.
+ 8,
+ pp.
+ 1164-1176,
+ Aug.
+ 2005,
+ doi:
+ 10.1109/TAC.2005.852568.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Shiriaev-2006-periodic-planning"
+literal "false"
+
+\end_inset
+
+ A.
+ Shiriaev,
+ A.
+ Robertsson,
+ J.
+ Perram,
+ A.
+ Sandberg,
+ Periodic motion planning for virtually constrained Euler–Lagrange systems,
+ Systems & Control Letters,
+ Volume 55,
+ Issue 11,
+ 2006,
+ Pages 900-907,
+ ISSN 0167-6911,
+ https://doi.org/10.1016/j.sysconle.2006.06.007.
+\end_layout
+
+\end_body
+\end_document
