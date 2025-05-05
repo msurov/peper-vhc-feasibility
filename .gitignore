@@ -1,0 +1,9 @@
+lib/*
+*.aux
+vhc-feasibility.pdf
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.lyx~
+*.lyx#
