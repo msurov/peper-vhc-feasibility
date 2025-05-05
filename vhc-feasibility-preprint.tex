@@ -1,0 +1,691 @@
+\documentclass[letterpaper,10pt,conference]{ieeeconf}
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+\let\proof\relax
+\let\endproof\relax
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{url}
+
+\title{\LARGE \bf
+    Virtual Holonomic Constraints in Motion Planning:\\
+    Revisiting Feasibility and Limitations
+}
+\author{
+  Maksim Surov$^{1}$
+  \thanks{
+    $^{1}$Maksim Surov is with Department of Information Technologies and AI, 
+    Sirius University of Science and Technology, 
+    Sochi, Russia
+    {\tt\small surov.m.o@gmail.com}
+  }
+}
+
+\theoremstyle{plain}
+\newtheorem{thm}{\protect\theoremname}
+
+\newcounter{definition}
+\theoremstyle{definition}
+\newtheorem{defn}[definition]{\protect\definitionname}
+
+\newcounter{remark}
+\theoremstyle{remark}
+\newtheorem{rem}[remark]{\protect\remarkname}
+
+\providecommand{\definitionname}{Definition}
+\providecommand{\lemmaname}{Lemma}
+\providecommand{\remarkname}{Remark}
+\providecommand{\theoremname}{Theorem}
+
+\begin{document}
+  \maketitle
+  \thispagestyle{empty}
+  \pagestyle{empty}
+
+  \begin{abstract}
+    This paper addresses the feasibility of virtual holonomic constraints (VHCs) 
+    in the context of motion planning for underactuated mechanical systems with a single degree of underactuation.
+    While existing literature has established a widely accepted definition of VHC,
+    we argue that this definition is overly restrictive and excludes a broad class of admissible trajectories from consideration.
+    To illustrate this point, we analyze a periodic motion of the Planar Vertical Take-Off and Landing (PVTOL) aircraft.
+    The corresponding phase trajectory and reference control input are analytic functions.
+    We demonstrate the stabilizability of this solution by constructing a 
+    feedback controller that ensures asymptotic orbital stability.
+    However, for this solution -- as well as for a broad class of similar ones -- 
+    there exists no VHC that satisfies the conventional definition.
+    This observation calls for a reconsideration of how the notion of VHC is defined,
+    with the potential to significantly expand the practical applicability of VHCs in motion planning.
+  \end{abstract}
+
+  \section{Introduction}
+    
+    In this paper, we consider Euler-Lagrange systems described by the
+    equation
+    \begin{equation}
+      M\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right)=B\left(q\right)u\label{eq:lag-sys}
+    \end{equation}
+    where $q\in\mathbb{R}^{n}$ denotes the generalized coordinates and
+    $u\in\mathbb{R}^{n-1}$ represents the control inputs. For simplicity,
+    we assume the configuration space is $\mathbb{R}^{n}$, thereby avoiding
+    a discussion of its topological properties. The matrix $M\left(q\right)\in\mathbb{R}^{n\times n}$
+    is positive definite; $C\left(q,\dot{q}\right)\in\mathbb{R}^{n\times n}$
+    is linear in $\dot{q}$; $G\left(q\right)\in\mathbb{R}^{n}$ is a
+    vector; $B\left(q\right)\in\mathbb{R}^{n\times\left(n-1\right)}$
+    is of rank $n-1$. All functions are assumed to be continuously differentiable.
+    This system is underactuated with an underactuation degree of one.
+    
+    For the system~(\ref{eq:lag-sys}), we consider the problem of motion
+    planning, which involves finding smooth functions $q_{*}\left(t\right)\in C^{2}\left(\mathbb{R}\right)$
+    and $u_{*}\left(t\right)\in C^{0}\left(\mathbb{R}\right)$ that satisfy
+    the system dynamics. While specific applications may impose additional
+    requirements on these functions, a typical criterion is the existence of stabilizing feedback
+    which ensures that the planned motion can be realized and maintained on a physical system.
+
+    The problem of motion planning has been studied in a number of publications~\cite{Shiriaev-2005-constructive-tool,Surov-2015,Freidovich-2007,Maggiore-2013,Consolini-2011}
+    using the \textbf{virtual holonomic constraints} (VHCs) approach.
+    This method assumes that the desired trajectory $q_{*}\left(t\right)$
+    satisfies a geometric constraint of the form $h\left(q_{*}\left(t\right)\right)=0$,
+    where $h:\mathbb{R}^{n}\to\mathbb{R}^{n-1}$ is a smooth function
+    with jacobian $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}$
+    of rank $n-1$ (see, e.g., \cite{Maggiore-2013,Otsason-2019}). Alternatively,
+    the VHC can be defined in parametric form $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$,
+    where $\theta$ is a scalar parameter and $\phi:\mathbb{R}\to\mathbb{R}^{n}$
+    is a smooth function. As shown in~\cite{Shiriaev-2005-constructive-tool},
+    the VHC framework enables reduction of the original $2n$-dimensional
+    dynamics~(\ref{eq:lag-sys}) to a single scalar second-order differential
+    equation, known as the \textbf{reduced dynamics}. A solution $\theta_{*}\left(t\right)$
+    to this equation automatically defines a corresponding trajectory
+    $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$ of
+    the original system~(\ref{eq:lag-sys}). This technique has significantly
+    simplified the motion planning problem and has facilitated the solution
+    of many challenging control tasks~\cite{Surov-2015,Freidovich-2007,Buss-2016}. 
+    
+    In~\cite{Maggiore-2013}, the authors initiated a detailed discussion
+    on the definition of VHC and the corresponding necessary conditions
+    on the functions $\phi\left(\cdot\right)$ and $h\left(\cdot\right)$.
+    To this end, they relate the VHCs concept to the notion of \textbf{controlled
+    invariant manifolds}~\cite[Chapter 6.1]{Isidori-1995}. For clarity
+    and brevity, we present a slightly modified version of the definition, adapted from \cite[Definition 2.1]{Maggiore-2013}:
+    \begin{defn}
+    \label{def:VHC}
+      A virtual holonomic constraint of order $n-1$ is
+      a relation $h\left(q\right)=0$, where $h:\mathbb{R}^{n}\to\mathbb{R}^{n-1}$
+      is smooth, $\mathrm{rank}\,dh\left(q\right)=n-1$ for all
+      $q\in h^{-1}\left(0\right)$ and the set 
+      \[
+          \Gamma=\left\{ \left(q,\dot{q}\right):h\left(q\right)=0\quad\text{and}\quad\frac{\partial h\left(q\right)}{\partial q}\dot{q}=0\right\} 
+      \]
+      is \textbf{controlled invariant}. That is, there exists a smooth feedback
+      $u\left(q,\dot{q}\right)$ such that $\Gamma$ is positively invariant
+      for the closed-loop system. The set $\Gamma$ is called the \textbf{constraint
+      manifold} associated with the VHC $h\left(q\right)=0$.
+    \end{defn}
+    %
+    Similar definitions can be found in other publications \cite{Consolini-2011,Otsason-2019,Consolini-2010,Jankuloski-2012,Consolini-2018}
+    by the same group of authors. In some of these works \cite{Consolini-2011,Consolini-2010,Jankuloski-2012},
+    the term \textit{feasible} VHC is used. A common requirement
+    across all these publications is that the entire set $\Gamma$ be
+    controlled invariant. Moreover, the authors underline, that the loss
+    of controlled invariance implies that the VHC is \textit{not feasible}
+    \cite[Chapter 2]{Jankuloski-2012}.
+    
+    In this work, we continue the discussion on the definition of VHCs.
+    We argue that requiring the set $\Gamma$ to be \textbf{controlled
+    invariant is overly restrictive} in the context of motion planning,
+    as it excludes a broad class of viable solutions. While the existence
+    of the structure of the controlled invariant manifold 
+    may be beneficial in certain applications -- such
+    as the design of stabilizing feedback controllers -- it is by no
+    means a necessary condition. In particular, the lack of controlled
+    invariance does not necessarily imply that trajectory stabilizability
+    is impossible. Therefore, we find the usage of the term \textit{feasible}
+    to describe only a narrow class of VHCs somewhat misleading. If one
+    follows this terminology, it would imply that a ``\textit{non-feasible}''
+    VHC could nevertheless be used to generate feasible trajectories --
+    an apparent contradiction.
+
+    In Section~\ref{sec:pvtol-trajectory}, we examine an example of a periodic trajectory of the PVTOL aircraft and prove that there {\bf exists no VHC} satisfying
+    Definition~\ref{def:VHC} associated with this trajectory. For this trajectory we also demonstrate the existence of a state feedback providing orbital asymptotic stability.
+    In Section~\ref{sec:non-regular-vhc}, we formulate Theorem~\ref{thm:singularity-necessity} that establishes the necessity of the failure of the controlled invariance property for a certain class of solutions. We also present a class of trajectories of the PVTOL system for which the Definition~\ref{def:VHC} fails. The concluding remarks and suggestions for a more precise definition are given in Section~\ref{sec:conclusion}.
+
+  % \subsection*{Notation}
+  %   In accordance with \cite{Isidori-1995}, we introduce the following
+  %   conventions:
+  %   \begin{itemize}
+  %     \item 
+  %       The directional derivative of a smooth function $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
+  %       along a vector field $f\in T\mathbb{R}^{n}$ is denoted by $L_{f}h\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}f\left(q\right)\in\mathbb{R}^{k}$.
+  %     \item
+  %       The higher-order directional derivatives are defined recursively as:
+  %       $L_{f}^{l}h\left(q\right)\equiv L_{f}L_{f}^{l-1}h\left(q\right)\in\mathbb{R}^{k}$.
+  %     \item
+  %       The Jacobian matrix of a function $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
+  %       is denoted by $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}\in\mathbb{R}^{k\times n}$.
+  %     \item 
+  %       The column space of a matrix $A$ is denoted by $\mathrm{Im}\left[A\right]$. 
+  %     \item
+  %       The kernel of a matrix $A\in\mathbb{R}^{n\times m}$ is defined as: $\ker\left[ A\right]\equiv\left\{ x\in\mathbb{R}^{m}\mid Ax=0\right\} .$
+  %   \end{itemize}
+
+  \section{Motivating Example: Periodic Trajectory of a PVTOL Aircraft}
+  \label{sec:pvtol-trajectory}
+
+    \begin{figure}
+      \begin{centering}
+        \includegraphics[width=8.5cm]{fig/pvtol_gen_coord_and_tictoc}
+      \par\end{centering}
+      \caption{PVTOL aircraft: generalized coordinates and tic-toc maneuver schematically.}
+      \label{fig:pvtol-tic-toc}
+    \end{figure}
+
+    Let us consider the PVTOL aircraft~\cite{Hauser-1992-pvtol},
+    the dynamics of which are governed by the system of ordinary differential equations:
+    \begin{equation}
+    \label{eq:pvtol-dynamics}
+      \ddot{x}=-\sin{\psi} \, u_{1},
+      \quad\ddot{z}=\cos{\psi} \, u_{1} - 1,
+      \quad\ddot{\psi} = u_{2},
+    \end{equation}
+    where $q=\left(x,z,\psi\right)^{\top}\in\mathbb{R}^{3}$ are generalized
+    coordinates and $u=\left(u_{1},u_{2}\right)^{\top}\in\mathbb{R}^{2}$
+    represents the control inputs, which are allowed to take both positive and negative values.
+    The coordinates $x,z$ specify the position of aircraft's center of mass, while the angle $\psi$ defines its attitude, as illustrated in Fig.~\ref{fig:pvtol-tic-toc}.
+    It is straightforward to verify that the PVTOL dynamics are of the Euler-Lagrange type, with the following matrices 
+    $M = I_{3\times3}$, $C = 0_{3\times3}$, 
+    \begin{align*}
+      &\, G = \left(\begin{array}{c}
+          0\\
+          1\\
+          0
+      \end{array}\right)\quad\text{and}\quad
+      B\left(q\right)=\left(\begin{array}{cc}
+          -\sin\psi & 0\\
+          \cos\psi & 0\\
+          0 & 1
+      \end{array}\right).
+    \end{align*}
+    In this notation, the system can be rewritten compactly as
+    $$
+        \ddot{q}=B\left(q\right)u-G,
+    $$
+    which aligns with the general structure of Euler--Lagrange systems~(\ref{eq:lag-sys}).
+    
+  \subsection{Tic-Toc Maneuver of PVTOL Aircraft}
+    Let us consider two functions $q_{*}\left(t\right)\in C^{\omega}$, $u_{*}\left(t\right)\in C^{\omega}$ defined as
+    \begin{align}
+    \label{eq:ref-traj}
+      q_{*}\left(t\right) & =\left(\begin{array}{c}
+          \sin t\\
+          -\frac{1}{2}\sin^{2}t\\
+          \frac{\pi}{2}-\arctan\left(2\sin t\right)
+          \end{array}\right)\quad\text{and}\\
+      u_{*}\left(t\right) & =\left(\begin{array}{c}
+          \sin t\sqrt{4\sin^{2}t+1}\\
+          \frac{12\sin t+2\sin3t}{\left(3-2\cos2t\right)^{2}}
+          \end{array}\right).\nonumber 
+    \end{align}
+    It can be readily verified by direct substitution that the pair $\left(q_{*}\left(t\right),u_{*}\left(t\right)\right)$
+    satisfies equations~(\ref{eq:pvtol-dynamics}). 
+    The trajectory
+    $q_{*}\left(t\right)$ corresponds to the so-called \textit{tic-toc} aerobatic maneuver of the aircraft, which is schematically illustrated in Fig.~\ref{fig:pvtol-tic-toc}.
+    In the following, we show that \textbf{no VHC} 
+    satisfying Definition~\ref{def:VHC}
+    can be associated with this trajectory.
+
+  \subsection{The Absence of Controlled Invariance}
+    Suppose, for the sake of contradiction, that there exists a function 
+    $h:C^{2}\left(\mathbb{R}^{3}\to\mathbb{R}^{2}\right)$
+    satisfying the following conditions:
+    \begin{itemize}
+      \item 
+        $h\left(q_{*}\left(t\right)\right)\equiv0$ for all $t$,
+      \item 
+        $\mathrm{rank}\,dh\left(q\right)=2$ for all $q \in h^{-1}\left(0\right)$,
+      \item 
+        the set
+        \[
+          \Gamma\equiv\left\{ \left(q,\dot{q}\right)\in\mathbb{R}^{6}\mid h\left(q\right)=0
+           \,\,\text{and}\,\, L_{\dot{q}}h\left(q\right)=0\right\} 
+        \]
+        is a controlled invariant manifold.
+    \end{itemize}
+    As discussed in~\cite{Consolini-2018}, the set $\Gamma$ is a two-dimensional manifold, which represents the tangent bundle $\Gamma=T\mathcal{C}$,
+    where the base space $\mathcal{C}$ is defined as 
+    $$
+      \mathcal{C}=\left\{ q\in\mathbb{R}^{3}\mid\exists\,t:\, q=q_{*}\left(t\right)\right\}.
+    $$
+
+    To establish the controlled invariance of $\Gamma$, we analyze the dynamics of the variable $y=h\left(q\right)$, given
+    by 
+    \begin{align}
+    \label{eq:ddot_y}
+      \dot{y} & =L_{\dot{q}}h\left(q\right)\nonumber \\
+      \ddot{y} & =dh\left(q\right)\left(B\left(q\right)u-G\right)+L_{\dot{q}}^{2}h\left(q\right).
+    \end{align}
+    According to~\cite[Chapter 6]{Isidori-1995}, the set $\Gamma$ is controlled invariant if and only if, for every $\left(q,\dot{q}\right)\in\Gamma$,
+    there exists a smooth mapping $u:\Gamma\to\mathbb{R}^{2}$ such that
+    the right hand side of the equation~(\ref{eq:ddot_y}) is identically
+    zero. This requirement implies that the following system of linear algebraic equations in~$u$ must be solvable for all $\left(q,\dot{q}\right)\in\Gamma$:
+    \begin{equation}
+    \label{eq:linsys-for-u}
+      dh\left(q\right)B\left(q\right)u=dh\left(q\right)G-L_{\dot{q}}^{2}h\left(q\right).
+    \end{equation}
+    Here, two options are possible:
+    \begin{itemize}
+      \item 
+        The matrix $dh\left(q\right)B\left(q\right) \in \mathbb{R}^{(n-1)\times (n-1)}$ is of full rank. In
+        this case, $\Gamma$ is controlled invariant for any bounded right-hand side.
+      \item 
+        If the matrix $dh\left(q\right)B\left(q\right)$ is not of full rank
+        at some $q_{0}\in\mathcal{C}$, then there exists a nonzero row
+        vector $N$ such that $N dh\left(q\right)B\left(q\right)=0$. In this case, the necessary condition for controlled invariance becomes
+        \begin{equation}
+        \label{eq:dq_constr}
+            Ndh\left(q_{0}\right)G-NL_{\dot{q}}^{2}h\left(q_{0}\right)=0\quad\text{for all}\quad\dot{q}\in T_{q_{0}}\mathcal{C}.
+        \end{equation}
+        Importantly, the first term $Ndh\left(q_{0}\right)G$ does not depend
+        on $\dot{q}$, while the second term is a quadratic form in $\dot{q}$. This implies that the only way to satisfy condition~(\ref{eq:dq_constr})  is for both terms to vanish: $Ndh\left(q_{0}\right)G=0$ and $NL_{\dot{q}}^{2}h\left(q_{0}\right)=0$
+        for all $\dot{q}\in T_{q_{0}}\mathcal{C}$.
+    \end{itemize}
+    Let us consider the point $q_{0}\in\mathcal{C}$ given by:
+    $$
+      q_{0}=q_{*}\left(0\right)=\left(0,0,\frac{\pi}{2}\right)^{\top}.
+    $$
+    At this point, the velocity vector $\dot{q}_{0}=\dot{q}_{*}\left(0\right)=\left(1,0,-2\right)^{\top}\in T_{q_{0}}\mathcal{C}$
+    lies in the image of the matrix
+    \begin{align*}
+      B\left(q_{0}\right) & =\left(\begin{array}{cc}
+      -1 & 0\\
+      0 & 0\\
+      0 & 1
+      \end{array}\right), \quad \text{that is,} \quad
+      \dot{q}_{0}\in\mathrm{Im}\left[B\left(q_{0}\right)\right] .
+    \end{align*}
+    The condition $h\left(q_{*}\left(t\right)\right)\equiv0$ implies
+    that the rows of $dh\left(q_{0}\right)$ are orthogonal to $\dot{q}_{0}$:
+    $dh\left(q_{0}\right)\dot{q}_{0}=0$. 
+    Consequently, the matrix $dh\left(q_{0}\right)B\left(q_{0}\right)$ cannot have full rank, hence 
+    it possesses a left annihilator $N\in\ker\left[dh\left(q_{0}\right)B\left(q_{0}\right)\right]^{\top}\setminus\left\{ 0\right\}$.
+    Then, in
+    order for $\Gamma$ to be controlled invariant, the condition~(\ref{eq:dq_constr})
+    must be satisfied. Since the matrix $dh\left(q\right)$ consists of two linearly independent rows, the row vector $Ndh\left(q_{0}\right)\in\mathbb{R}^{1\times3}$
+    is nonzero. Furthermore, the orthogonal complement of this row vector is a two-dimensional subspace that coincides with $\mathrm{Im}\left[B\left(q_{0}\right)\right]$.
+    Observing that the vector $G$ does not lie in 
+    $\mathrm{Im}\left[B\left(q_{0}\right)\right]$,
+    we conclude that $Ndh\left(q_{0}\right)G$ is nonzero. Therefore, the equation~(\ref{eq:dq_constr}) can only hold for specific values of
+    $\dot{q}$, namely $\dot{q}=\pm\dot{q}_{0}$. However, if we consider $\dot{q}=0\in T_{q_{0}}\mathcal{Q}$, the second term of~(\ref{eq:dq_constr}) vanishes, causing the equality to be violated.
+    This contradicts the requirement that~\eqref{eq:dq_constr} must hold for all $\dot{q} \in T_{q_{0}} \mathcal{Q}$.
+    Therefore, we conclude that $\Gamma$ is \textbf{not a controlled invariant manifold}. \qed
+
+    This general result can also be verified by the reader through direct computation using a specific candidate for the VHC, such as
+    \begin{equation}
+    \label{eq:implicit-vhc-candidate}
+      h\left(q\right)=\left(\begin{array}{c}
+        z+\frac{1}{2}x^{2}\\
+        \psi-\frac{\pi}{2}+\arctan\left(2x\right)
+        \end{array}\right)
+    \end{equation}
+    or any other function $h\left(q\right)$ that satisfies  $h\left(q_{*}\left(t\right)\right)\equiv0$
+    and has $\mathrm{rank}\,dh\left(q\right)=2$ on $\mathcal{C}$.
+    The arguments above naturally raise the question of the practical realizability of such a trajectory in a physical system, particularly in the presence of model uncertainties. One might question whether the strong requirement of passing the system through the given configuration $q_{0}$ with a precisely specific velocity is feasible, as it may appear unrealistic in practice.
+    However, this requirement is a direct consequence of imposing a VHC that constrains the system to move along a prescribed direction. In real-world scenarios, slight deviations from the VHC allow the system to traverse the corresponding configuration $q_{0}$ with a range of possible velocities.
+
+    The existence of a stabilizing feedback for the trajectory~(\ref{eq:ref-traj}) follows directly from~\cite[Theorem4]{Nam-1992}, as the dimension of the corresponding Lie algebra for the PVTOL aircraft equals 6 for almost all points along the reference orbit.
+    Alternatively, one can design a state feedback controller using the transverse linearization approach with the transverse coordinates defined as in~\cite{Surov-2020}.
+
+    In this article, we restrict ourselves to presenting the results of computer simulation, available at~\url{https://youtube.com/shorts/EM2qfht1D74}, where we used the transverse coordinates $\tau \in [-\pi, \pi), \rho \in \mathbb{R}^5$, defined as
+    \begin{align*}
+      & \tau:=\mathrm{atan2}\left(x,\dot{x}\right),\quad\rho_{1,2}:=h\left(q\right),\quad\rho_{3,4}:=L_{\dot{q}}h\left(q\right),\\
+      & \rho_{5}:=\left(x-x_{*}\left(\tau\right)\right)\sin\tau+\left(\dot{x}-\dot{x}_{*}\left(\tau\right)\right)\cos\tau
+    \end{align*}
+    with the VHC $h(q)$ as in~(\ref{eq:implicit-vhc-candidate}), together with the new control input
+    $
+      w:=u-u_{*}\left(\tau\right).
+    $
+
+  \section{Singular Reduced Dynamics}
+  \label{sec:non-regular-vhc}
+    We aim to show that the trajectory presented above is not an isolated exception, but rather a representative example within a broad class of admissible solutions. To this end, we briefly recall the method of motion planning based on VHCs~\cite{Shiriaev-2005-constructive-tool,Shiriaev-2006-periodic-planning}.
+    As known, according to~\cite[Proposition~2]{Shiriaev-2005-constructive-tool},
+    the dynamics of system~(\ref{eq:lag-sys}) under an imposed VHC in parametric form~$q=\phi\left(\theta\right)$
+    are governed by the scalar differential equation
+    \begin{equation}
+    \label{eq:alpha-beta-gamma}
+      \alpha\left(\theta\right)\ddot{\theta}+\beta\left(\theta\right)\dot{\theta}^{2}+\gamma\left(\theta\right)=0,
+    \end{equation}
+    where the scalar coefficients $\alpha\left(\theta\right),\beta\left(\theta\right)$
+    and $\gamma\left(\theta\right)$ are defined as
+    \begin{align*}
+      \alpha\left(\theta\right) & =B_{\perp}\left(\phi\left(\theta\right)\right)M\left(\phi\left(\theta\right)\right)\phi'\left(\theta\right),\\
+      \beta\left(\theta\right) & =B_{\perp}\left(\phi\left(\theta\right)\right)M\left(\phi\left(\theta\right)\right)\phi''\left(\theta\right)\\
+      & \quad+B_{\perp}\left(\phi\left(\theta\right)\right)C\left(\phi\left(\theta\right),\phi'\left(\theta\right)\right)\phi'\left(\theta\right),\\
+      \gamma\left(\theta\right) & =B_{\perp}\left(\phi\left(\theta\right)\right)G\left(\phi\left(\theta\right)\right)
+    \end{align*}
+    and $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n}\setminus\left\{ 0\right\} $
+    is a left annihilator of $B\left(q\right)$.
+    For the PVTOL aircraft considered in the previous section, we had used the VHC
+    \begin{equation}
+    \label{eq:pvtol-vhc}
+      \phi\left(\theta\right)=\left(\theta,-\frac{1}{2}\theta^{2},\frac{\pi}{2}-\arctan2\theta\right)^{\top}
+    \end{equation}
+    and matrix $B_{\perp}\left(q\right)=\left(\cos\psi,\sin\psi,0\right)$,
+    which result in the reduced dynamics:
+    \begin{equation}
+    \label{eq:pvtol-reduced-dynamics}
+      \theta\ddot{\theta}-\dot{\theta}^{2}+1=0.
+    \end{equation}
+    A reader can verify through direct substitution that the piecewise function
+    \begin{equation}
+    \label{eq:piecewise-solution-pvtol}
+      \theta_{*}\left(t\right)=\begin{cases}
+          \theta_{1}\sin\frac{t}{\theta_{1}} & t\in\left[\theta_{1}\pi,0\right)\\
+          \theta_{2}\sin\frac{t}{\theta_{2}} & t\in\left[0,\theta_{2}\pi\right]
+        \end{cases}
+    \end{equation}
+    with parameters $\theta_{1}<0<\theta_{2}$, 
+    is twice continuously differentiable on the interval $t\in\left[\theta_{1}\pi,\theta_{2}\pi\right]$
+    and satisfies equation~(\ref{eq:pvtol-reduced-dynamics}).
+    By selecting $\theta_{1}=-1$ and $\theta_{2}=1$,
+    we obtain the solution $\theta_{*}\left(t\right)=\sin t$
+    and consequently, the trajectory $q_{*}\left(t\right)$ presented in~(\ref{eq:ref-traj}).
+    
+    As observed, equation~(\ref{eq:pvtol-reduced-dynamics}) exhibits a singularity
+    at $\theta=0$, thereby violating requirements of the Picard-Lindelöf
+    existence theorem. However, as demonstrated in~\cite[Theorem~1]{Surov-2018},
+    smooth solutions to the reduced dynamics with isolated singularities may still exist, 
+    provided that certain additional conditions are satisfied by the coefficients
+    $\alpha\left(\theta\right),\beta\left(\theta\right)$
+    and $\gamma\left(\theta\right)$. 
+    We now briefly recall the formulation of this existence
+    \begin{thm}
+    \label{thm:singular-solutions-existence}
+      Let us consider the differential
+      equation~(\ref{eq:alpha-beta-gamma}) with the coefficients 
+      $\alpha(\theta), \beta(\theta)$ and $\gamma(\theta)$ defined on an open interval $\theta\in I\subset\mathbb{R}$.
+      Suppose the following conditions hold:
+      \begin{itemize}
+        \item
+          the coefficients $\alpha\left(\theta\right),\beta\left(\theta\right)$
+          and $\gamma\left(\theta\right)$ are smooth functions: $\alpha\left(\theta\right)\in C^{3}\left(I\right)$
+          and $\beta\left(\theta\right),\gamma\left(\theta\right)\in C^{2}\left(I\right)$;
+        \item
+          the function $\alpha\left(\theta\right)$ has a unique zero on the
+          interval $\exists!\,\theta_{s}\in I:\alpha\left(\theta_{s}\right)=0$;
+        \item
+          the following inequalities hold true 
+          \[
+            \alpha'\left(\theta_{s}\right)>0,\quad\gamma\left(I\right)>0,\quad\frac{\beta\left(\theta_{s}\right)}{\alpha'\left(\theta_{s}\right)}<-\frac{1}{2}.
+          \]
+      \end{itemize}
+      Then, for any real values $\theta_{1},\theta_{2}\in I$, $\theta_{1}<\theta_{s}<\theta_{2}$,
+      and $\dot{\theta}_{1}\geq0$, $\dot{\theta}_{2}\geq0$ there exists
+      the smooth function $\theta_{*}\left(t\right)\in C^{2}$ defined on
+      the interval $\left[t_{1},t_{2}\right]$ satisfying the equation~(\ref{eq:alpha-beta-gamma})
+      and the boundary conditions 
+      \begin{align}
+        & \theta_{*}\left(t_{1}\right)=\theta_{1},\quad\dot{\theta}_{*}\left(t_{1}\right)=\dot{\theta}_{1},\label{eq:piecewise-solution-general}\\
+        \exists t_{s}\in\left(t_{1},\infty\right):\quad & \theta_{*}\left(t_{s}\right)=\theta_{s},\quad\dot{\theta}_{*}\left(t_{s}\right)=\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)},\nonumber \\
+        \exists t_{2}\in\left(t_{s},\infty\right):\quad & \theta_{*}\left(t_{2}\right)=\theta_{2},\quad\dot{\theta}_{*}\left(t_{2}\right)=\dot{\theta}_{2}.\nonumber 
+      \end{align}
+    \end{thm}
+
+    \begin{rem}
+    \label{rem:periodic-solitions}
+      Due to the symmetry of equation~(\ref{eq:alpha-beta-gamma})
+      with respect to time inversion $t\mapsto-t$, the function $\theta_{*}\left(-t\right)$
+      is also a solution to this equation.
+      The function $\theta_{*}\left(-t\right)$
+      passes through the phase-space point with $\theta=\theta_{s}$ and $\dot{\theta}=-\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}$.
+      If we select $\dot{\theta}_{1}=\dot{\theta}_{2}=0$, then by concatenating the
+      two functions $\theta_{*}\left(t\right)$ and $\theta_{*}\left(2t_{2}-t\right)$,
+      we obtain a periodic solution with period $2t_{2}-2t_{1}$.
+    \end{rem}
+
+    It is easy to see that the reduced dynamics~(\ref{eq:pvtol-reduced-dynamics})
+    satisfy conditions of Theorem~\ref{thm:singular-solutions-existence}
+    for $I=\mathbb{R}$ and $\theta_{s}=0$. The solution~(\ref{eq:piecewise-solution-pvtol})
+    corresponds to (\ref{eq:piecewise-solution-general}) if we take $t_{1}=\frac{\pi\theta_{1}}{2}$,
+    $t_{2}=\frac{\pi\theta_{2}}{2}$ and $t_{s}=0$.
+
+    Importantly, the singularity presented in Theorem~\ref{thm:singular-solutions-existence}
+    is not removable and cannot be eliminated through a coordinate change or different representations of the VHC. To demonstrate this, consider the following
+    \begin{thm}
+    \label{thm:singularity-necessity} 
+      Let $q_{*}\left(t\right),u_{*}\left(t\right)$
+      be a smooth solution to the mechanical system~(\ref{eq:lag-sys}).
+      Suppose that, at some time $t_{s}$, the trajectory $q_{*}\left(t\right)$
+      satisfies 
+      \begin{align}
+      \label{eq:singularity-condition}
+        \exists t_{s} & :\,\dot{q}_{*}\left(t_{s}\right)\ne0\quad\text{and}\nonumber \\
+           & B_{\perp}\left(q_{*}\left(t_{s}\right)\right)M\left(q_{*}\left(t_{s}\right)\right)\dot{q}_{*}\left(t_{s}\right)=0,
+      \end{align}
+      where $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n} \setminus \left\{ 0\right\} $
+      is a left annihilator of $B\left(q\right)$. Then the reduced dynamics~(\ref{eq:alpha-beta-gamma})
+      corresponding to \textbf{any} smooth parametrization $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+      will necessarily satisfy
+      \begin{equation}
+      \alpha\left(\theta_{s}\right)=0,\quad\text{where}\quad\theta_{s}\equiv\theta_{*}\left(t_{s}\right).\label{eq:alpha-eq-zero}
+      \end{equation}
+      If, in addition, $B_{\perp}\left(q_{*}\left(t_{s}\right)\right)G\left(q_{*}\left(t_{s}\right)\right)\ne0$,
+      then the reduced dynamics exhibit a non-removable singularity at $\theta_{s}$.
+    \end{thm}
+
+    The singularities in the reduced dynamics play a crucial role in the loss of controlled invariance of the set $\Gamma$. 
+    For a trajectory $q_{*}\left(t\right)$ of a general mechanical system~(\ref{eq:lag-sys}) the vanishing
+  of the coefficient $\alpha\left(\theta_{s}\right)$
+    in corresponding reduced dynamics under parametrization
+    $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
+    imposes a specific constraint on the derivative $\dot{\theta}_{s}$.
+    In particular, under the assumption that $\theta_{*}\left(t\right)$
+    is smooth, the following relation must hold:
+    \begin{equation}
+    \label{eq:constr-for-dtheta}
+      \beta\left(\theta_{s}\right)\dot{\theta}_{s}^{2}+\gamma\left(\theta_{s}\right)=0.
+    \end{equation}
+    If coefficients $\beta\left(\theta_{s}\right)$
+    and $\gamma\left(\theta_{s}\right)$ have opposite signs, then
+    the mechanical system at the configuration 
+    $q_{s}=\phi\left(\theta_{s}\right)$
+    can move along the direction $\phi'\left(\theta_{s}\right)$, but
+    only with a specific velocity given by:
+    $\dot{q}_{s}=\pm\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}\phi'\left(\theta_{s}\right).$
+
+    A similar result is obtained when considering an implicit VHC $h\left(q_{*}\left(t\right)\right)\equiv0$.
+    In this case, the admissible velocity $\dot{q}_{s}$ can be determined by imposing the conditions
+    \[
+      \frac{d}{dt}h\left(q_{*}\left(t\right)\right)=0\quad\text{and}\quad
+      \frac{d^{2}}{dt^{2}}h\left(q_{*}\left(t\right)\right)=0\quad
+      \text{at} \quad t=t_{s},
+    \]
+    which lead to the system of two algebraic equations:
+    \begin{align}
+    \label{eq:condition-for-dq}
+      & dh\dot{q}_{s}=0 \\
+      & N L_{\dot{q}_{s}}^{2}h-NdhM^{-1}C\dot{q}_{s}=NdhM^{-1}G\quad\text{at}\quad q=q_{s}  \nonumber
+    \end{align}
+    where constant $N\in\ker\left[dh\left(q_{s}\right)M^{-1}\left(q_{s}\right)B\left(q_{s}\right)\right]^{\top}\setminus\left\{ 0\right\}$. The existence of $N$ follows from the fact $\ensuremath{B_{\perp}\left(q_{s}\right)M\left(q_{s}\right)\dot{q}_{s}=0}$.
+    Substituting $\dot{q}_{s}=\dot{\theta}_{s}V$ with some constant $V\in\ker\left[dh\left(q_{s}\right)\right]\setminus\left\{ 0\right\}$,
+    reduces the system~(\ref{eq:condition-for-dq}) to a quadratic equation in $\dot{\theta}_{s}$:
+    \[
+      \left(NL_{V}^{2}h-NdhM^{-1}CV\right)\dot{\theta}_{s}^{2}=NdhM^{-1}G ,
+    \]
+    which is equivalent to~(\ref{eq:constr-for-dtheta}).
+    The condition $B_{\perp}\left(q_{s}\right)G\left(q_{s}\right)\ne0$ in
+    Theorem~\ref{thm:singularity-necessity}
+    implies that $Ndh\left(q_{s}\right)M^{-1}\left(q_{s}\right)G\left(q_{s}\right) \ne 0$. Consequently,
+    the equation either admits two solutions of opposite signs or has no solution at
+    all. The former case permits the existence of smooth trajectories
+    $q_{*}\left(t\right)$, as demonstrated in section above, but destroys
+    the structure of the controlled invariant manifold. Therefore, Definition~\ref{def:VHC}
+    excludes from consideration all trajectories described in Theorem~\ref{thm:singularity-necessity}.
+
+    \subsection*{Example: PVTOL Aircraft Trajectories}
+      To explore trajectories of the PVTOL aircraft, we propose considering the VHC
+      \begin{equation}
+      \label{eq:pvtol-vhc-poly}
+        \phi\left(\theta\right)=q_{s}+B\left(q_{s}\right)\left(\begin{array}{c}
+          k_{1}\\
+          k_{2}
+        \end{array}\right)\theta+\frac{k_{3}}{2}B_{\perp}^{\top}\left(q_{s}\right)\theta^{2},
+      \end{equation}
+      where $q_{s} \equiv \left(x_{s}, z_{s}, \psi_{s}\right)^{\top}$; $k_{1}, k_{2}, k_{3} \in \mathbb{R}$ to be defined; and $B_{\perp}\left(q_{s}\right) = \left(\cos\psi_{s}, \sin\psi_{s}, 0\right)$.
+      As seen, the reduced dynamics 
+      \begin{align}
+      \label{eq:alpha-beta-gamma-poly-vhc}
+        & \alpha\left(\theta\right)\ddot{\theta}+\beta\left(\theta\right)\dot{\theta}^{2}+\gamma\left(\theta\right)=0,\quad\text{with}\\
+        & \alpha\left(\theta\right)=k_{1}\sin\left(k_{2}\theta\right)+k_{3}\theta\cos\left(k_{2}\theta\right), \nonumber  \\
+        & \beta\left(\theta\right)=k_{3}\cos\left(k_{2}\theta\right),\quad\gamma\left(\theta\right)=\sin\left(\psi_{s}+k_{2}\theta\right)\nonumber 
+      \end{align}
+      exhibit a singularity at $\theta=0$, corresponding to the configuration $q_{s}$ of the aircraft.
+      Applying Theorem~\ref{thm:singular-solutions-existence}
+      to dynamics~(\ref{eq:alpha-beta-gamma-poly-vhc}), we obtain the following system of inequalities:
+      \begin{align*}
+        & \alpha'\left(0\right)=k_{1}k_{2}+k_{3}>0,\quad\frac{\beta\left(0\right)}{\alpha'\left(0\right)}=\frac{k_{3}}{k_{1}k_{2}+k_{3}}<-\frac{1}{2},\\
+        & \gamma\left(\theta\right)=\sin\left(\psi_{s}+k_{2}\theta\right)>0.
+      \end{align*}
+      This system is solvable\footnote{one can find other solutions, multiplying all the coefficients of the reduced dynamics by $-1$.} on the interval $0<\psi_{s}<\pi$ under the conditions $k_{3}<0$ and $k_{1}k_{2}>-k_{3}$.
+      Thus, based on Remark~\ref{rem:periodic-solitions}, we conclude the existence of periodic solutions. 
+      In particular, the PVTOL aircraft can perform a periodic motion with small amplitude around a configuration with attitude $\psi_s = \frac{\pi}{4}$.
+      Simulation results for such a trajectory are available at~\url{https://youtube.com/shorts/EM2qfht1D74}. One can further prove, using arguments similar to those presented above, that all such trajectories also cannot be found when adopting Definition~\ref{def:VHC}.
+
+  \section{Concluding Remarks}
+  \label{sec:conclusion}
+    We have demonstrated, through a specific example, that there exists a class of feasible solutions for mechanical systems that satisfy all conventional conditions except for the controlled invariance of the manifold $\Gamma$ in Definition~\ref{def:VHC}. Moreover, we have shown that a VHC which does not satisfy this definition can still serve to define transverse coordinates and enable the construction of stabilizing feedback.
+
+    The PVTOL system is not unique in this regard. By applying Theorem~\ref{thm:singular-solutions-existence}, one can construct similar trajectories for other underactuated systems such as the Pendubot, the Furuta pendulum (as in~\cite{Surov-2018}), the cart-pendulum, and others. As demonstrated, these solutions do not admit the existence of a controlled invariant manifold $\Gamma$.
+
+    Therefore, we conclude that the requirement of controlled invariance for $\Gamma$ is superfluous. In our view, the feasibility of a VHC of the form $h(q) = 0$ with $dh(q)$ of full rank on $\mathcal{C}$, is determined by the existence of a solution $(q_*(t), u_*(t))$ to the system~(\ref{eq:lag-sys}) defined on a nontrivial time interval $I$, such that $h(q_*(t)) \equiv 0$ for all $t \in I$. 
+    
+    Furthermore, a single, uniform definition of VHC may be unnecessarily restrictive, as various applications may demand different properties. For instance, the requirement of continuous differentiability of $h(q)$ over the entire set $\mathcal{C}$ may be too strong in scenarios involving hybrid systems. It is, therefore, more appropriate to tailor the definition and requirements of VHCs to the specifics of each application. A comprehensive analysis and classification of such requirements is an important direction for future research.
+
+  \begin{thebibliography}{10}
+
+    \bibitem{Shiriaev-2005-constructive-tool}
+      A. Shiriaev, J. W. Perram and C. Canudas-de-Wit, 
+      Constructive tool for orbital stabilization of underactuated nonlinear systems: virtual constraints approach,
+      in IEEE Transactions on Automatic Control, vol. 50, no. 8, pp. 1164-1176, Aug. 2005, 
+      doi: 10.1109/TAC.2005.852568. 
+
+    \bibitem{Surov-2015}
+      M. Surov, A. Shiriaev, L. Freidovich, S. Gusev and L. Paramonov, Case study in non-prehensile manipulation: planning and orbital stabilization of one-directional rollings for the "Butterfly" robot, 
+      2015 IEEE International Conference on Robotics and Automation (ICRA), 
+      Seattle, WA, USA, 2015, pp. 1484-1489, 
+      doi: 10.1109/ICRA.2015.7139385.
+  
+    \bibitem{Freidovich-2007} 
+      L. Freidovich, A. Robertsson, A. Shiriaev, R. Johansson,
+      Periodic motions of the Pendubot via virtual holonomic constraints: Theory and experiments,
+      Automatica, Volume 44, Issue 3, 2008, 
+      Pages 785-791, 
+      doi.org: 10.1016/j.automatica.2007.07.011.
+
+    \bibitem{Maggiore-2013}
+      M. Maggiore and L. Consolini,
+      Virtual Holonomic Constraints for Euler--Lagrange Systems,
+      in IEEE Transactions on Automatic Control, vol. 58, no. 4, pp. 1001-1008, April 2013,
+      doi: 10.1109/TAC.2012.2215538.
+
+    \bibitem{Consolini-2011}
+      L. Consolini and M. Maggiore,
+      On the swing-up of the Pendubot using virtual holonomic constrains,
+      2011 50th IEEE Conference on Decision and Control and European Control Conference, Orlando, FL, USA, 2011, pp. 4803-4808,
+      doi: 10.1109/CDC.2011.6161512.
+
+    \bibitem{Otsason-2019}
+      R. Otsason and M. Maggiore,
+      On the Generation of Virtual Holonomic Constraints for Mechanical Systems With Underactuation Degree One,
+      2019 IEEE 58th Conference on Decision and Control (CDC), Nice, France, 2019, pp. 8054-8060, 
+      doi: 10.1109/CDC40024.2019.9029201.
+
+    \bibitem{Buss-2016} 
+      B. G. Buss, K. A. Hamed, B. A. Griffin and J. W. Grizzle, Experimental results for 3D bipedal robot walking based on systematic optimization of virtual constraints,
+      2016 American Control Conference (ACC), Boston, MA, USA, 2016, pp. 4785-4792, 
+      doi: 10.1109/ACC.2016.7526111.
+  
+    \bibitem{Isidori-1995}
+      A. Isidori,
+      Nonlinear Control Systems, 3rd Edition, 
+      Springer, 1995, Berlin,
+      doi: 10.1007/978-1-84628-615-5 
+
+    \bibitem{Consolini-2010}
+      L. Consolini, M. Maggiore,
+      Virtual Holonomic Constraints for Euler-Lagrange Systems, 
+      IFAC Proceedings Volumes, Volume 43, Issue 14, 2010, Pages 1193-1198.
+  
+    \bibitem{Jankuloski-2012}
+      D. Jankuloski, M. Maggiore, L. Consolini,
+      Further Results on Virtual Holonomic Constraints,
+      IFAC Proceedings Volumes, Volume 45, Issue 19, 2012, Pages 84-89.
+
+    \bibitem{Consolini-2018}
+      L. Consolini, A. Costalunga, M. Maggiore,
+      A coordinate-free theory of virtual holonomic constraints,
+      Journal of Geometric Mechanics, 2018, 10(4): 467-502, 
+      doi: 10.3934/jgm.2018018.
+
+    \bibitem{Hauser-1992-pvtol} 
+      J. Hauser, S. Sastry, G. Meyer,
+      Nonlinear control design for slightly non-minimum phase systems: Applicationto V/STOL aircraft,
+      Automatica, Volume 28, Issue 4, 1992, Pages 665-679, ISSN 0005-1098,
+      doi: 10.1016/0005-1098(92)90029-F.
+  
+    \bibitem{Banaszuk-1995}
+      A. Banaszuk, J. Hauser,
+      Feedback linearization of transverse dynamics for periodic orbits, 
+      Systems \& Control Letters, 
+      Volume 26, Issue 2, 1995, Pages 95-105, ISSN 0167-6911, 
+      doi: 10.1016/0167-6911(94)00110-H.
+  
+    \bibitem{Surov-2020}
+      M. Surov, S. Gusev and L. Freidovich, 
+      Constructing Transverse Coordinates for Orbital Stabilization of Periodic Trajectories,
+      2020 American Control Conference (ACC), Denver, CO, USA, 2020, pp. 836-841,
+      doi: 10.23919/ACC45564.2020.9147533.
+  
+    \bibitem{Yakubovich-1986}
+      V.A. Yakubovich,
+      Linear-quadratic optimization problem and frequency theorem for periodic systems,
+      Siberian Math. J., 27, 181--200.
+
+    \bibitem{Leonov-2006}
+      Leonov G. A.,
+      Generalization of the Andronov–Vitt theorem,
+      Regular and Chaotic Dynamics,
+      2006, Volume 11, Number 2, pp. 281-289.
+
+    \bibitem{Kalman-1960-optimal-control}
+      R.E. Kalman,
+      Contributions to the Theory of Optimal Control. Matematica Mexicana, 1960, 5, 102-119. 
+
+    \bibitem{Gusev-2010}
+       S. Gusev, S. Johansson, B. Kågström, et al,
+       A numerical evaluation of solvers for the periodic Riccati differential equation,
+       Bit Numer Math 50, 301–329 (2010),
+       doi: 10.1007/s10543-010-0257-5.
+
+    \bibitem{Shiriaev-2006-periodic-planning}
+      A. Shiriaev, A. Robertsson, J. Perram, A. Sandberg,
+      Periodic motion planning for virtually constrained Euler-Lagrange systems,
+      Systems \& Control Letters, Volume 55, Issue 11, 2006, Pages 900-907.
+
+    \bibitem{Surov-2018}
+      M. Surov, S. V. Gusev and A. S. Shiriaev,
+      New Results on Trajectory Planning for Underactuated Mechanical Systems with Singularities in Dynamics of a Motion Generator, 
+      2018 IEEE Conference on Decision and Control (CDC), Miami, FL, USA, 2018, pp. 6900-6905,
+      doi: 10.1109/CDC.2018.8618669.
+
+    \bibitem{Nam-1992}
+      K. Nam and A. Arapostathis, 
+      A sufficient condition for local controllability of nonlinear systems along closed orbits,
+      in IEEE Transactions on Automatic Control, vol. 37, no. 3, pp. 378-380, March 1992, 
+      doi: 10.1109/9.119642. 
+
+  \end{thebibliography}
+    
+\end{document}
