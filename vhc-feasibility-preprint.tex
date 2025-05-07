@@ -1,29 +1,26 @@
-\documentclass[letterpaper,10pt,conference]{ieeeconf}
+\documentclass[letterpaper,10pt,conference]{IEEEtran}
+
+% \documentclass[letterpaper,10pt,conference]{ieeeconf}
 \IEEEoverridecommandlockouts
-\overrideIEEEmargins
+% \overrideIEEEmargins
+
+% \documentclass[journal,twoside,web]{ieeecolor}
+% \usepackage{lcsys}
+% \usepackage{cite}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathptmx}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
 \let\proof\relax
 \let\endproof\relax
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}
 \usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{graphicx}
 \usepackage{url}
 
-\title{\LARGE \bf
-  Virtual Holonomic Constraints in Motion Planning:\\
-  Revisiting Feasibility and Limitations
-}
-\author{
-  Maksim Surov$^{1}$
-  \thanks{
-    $^{1}$Maksim Surov is with Department of Information Technologies and AI, 
-    Sirius University of Science and Technology, 
-    Sochi, Russia
-    {\tt\small surov.m.o@gmail.com}
-  }
-}
 
 \theoremstyle{plain}
 \newtheorem{thm}{\protect\theoremname}
@@ -40,6 +37,24 @@
 \providecommand{\lemmaname}{Lemma}
 \providecommand{\remarkname}{Remark}
 \providecommand{\theoremname}{Theorem}
+
+\title{
+    Virtual Holonomic Constraints in Motion Planning: \\
+    Revisiting Feasibility and Limitations
+}
+
+\author{
+  Maksim Surov$^{1}$
+  % \thanks{
+  %   *This work was not supported by any organization
+  % }
+  \thanks{
+    $^{1}$Maksim Surov is with Department of Information Technologies and AI, 
+    Sirius University of Science and Technology, 
+    Sochi, Russia
+    {\tt\small surov.m.o@gmail.com}
+  }
+}
 
 \begin{document}
   \maketitle
@@ -155,6 +170,7 @@
 
     \begin{figure}
       \begin{centering}
+        \vspace{4pt}
         \includegraphics[width=8.5cm]{fig/pvtol_gen_coord_and_tictoc}
       \par\end{centering}
       \caption{PVTOL aircraft: generalized coordinates and tic-toc maneuver schematically.}
@@ -297,8 +313,8 @@
     Observing that the vector $G$ does not lie in 
     $\mathrm{Im}\left[B\left(q_{0}\right)\right]$,
     we conclude that $Ndh\left(q_{0}\right)G$ is nonzero. Therefore, the equation~(\ref{eq:dq_constr}) can only hold for specific values of
-    $\dot{q}$, namely $\dot{q}=\pm\dot{q}_{0}$. However, if we consider $\dot{q}=0\in T_{q_{0}}\mathcal{Q}$, the second term of~(\ref{eq:dq_constr}) vanishes, causing the equality to be violated.
-    This contradicts the requirement that~\eqref{eq:dq_constr} must hold for all $\dot{q} \in T_{q_{0}} \mathcal{Q}$.
+    $\dot{q}$, namely $\dot{q}=\pm\dot{q}_{0}$. However, if we consider $\dot{q}=0\in T_{q_{0}}\mathcal{C}$, the second term of~(\ref{eq:dq_constr}) vanishes, causing the equality to be violated.
+    This contradicts the requirement that~\eqref{eq:dq_constr} must hold for all $\dot{q} \in T_{q_{0}} \mathcal{C}$.
     Therefore, we conclude that $\Gamma$ is \textbf{not a controlled invariant manifold}. \qed
 
     This general result can also be verified by the reader through direct computation using a specific candidate for the VHC, such as
@@ -394,9 +410,9 @@
           and $\beta\left(\theta\right),\gamma\left(\theta\right)\in C^{2}\left(I\right)$;
         \item
           the function $\alpha\left(\theta\right)$ has a unique zero on the
-          interval $\exists!\,\theta_{s}\in I:\alpha\left(\theta_{s}\right)=0$;
+          interval: $\exists!\,\theta_{s}\in I:\alpha\left(\theta_{s}\right)=0$;
         \item
-          the following inequalities hold true 
+          the following inequalities hold true:
           \[
             \alpha'\left(\theta_{s}\right)>0,\quad\gamma\left(I\right)>0,\quad\frac{\beta\left(\theta_{s}\right)}{\alpha'\left(\theta_{s}\right)}<-\frac{1}{2}.
           \]
@@ -456,8 +472,8 @@
     \end{thm}
 
     The singularities in reduced dynamics play a crucial role in the loss of controlled invariance of the set $\Gamma$. 
-    For a trajectory $q_{*}\left(t\right)$ of a general mechanical system~(\ref{eq:lag-sys}) the vanishing
-  of the coefficient $\alpha\left(\theta_{s}\right)$
+    For a trajectory $q_{*}\left(t\right)$ of the mechanical system~(\ref{eq:lag-sys}) the vanishing
+    of the coefficient $\alpha\left(\theta_{s}\right)$
     in corresponding reduced dynamics under parametrization
     $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$
     imposes a specific constraint on the derivative $\dot{\theta}_{s}$.
@@ -549,7 +565,7 @@
     Furthermore, restricting the term \textit{feasible} to a narrow class of VHCs can be misleading.
     Under such a definition, a VHC might be labeled ``non-feasible''
     even when it successfully generates fully realizable trajectories -- creating a contradiction in terms.
-    In our view, the requirement of controlled invariance in Definition~\ref{def:VHC}
+    To resolve this terminological inconsistency, the requirement of controlled invariance in Definition~\ref{def:VHC}
     should instead be replaced with a condition ensuring the existence of a solution to 
     the mechanical system along which the constraint relation holds.
 
