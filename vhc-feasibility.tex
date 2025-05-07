@@ -1,29 +1,24 @@
-\documentclass[letterpaper,10pt,conference]{ieeeconf}
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
 \IEEEoverridecommandlockouts
 \overrideIEEEmargins
+
+% \documentclass[journal,twoside,web]{ieeecolor}
+% \usepackage{lcsys}
+% \usepackage{cite}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathptmx}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
 \let\proof\relax
 \let\endproof\relax
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}
 \usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{graphicx}
 \usepackage{url}
 
-\title{\LARGE \bf
-  Virtual Holonomic Constraints in Motion Planning:\\
-  Revisiting Feasibility and Limitations
-}
-\author{
-  Maksim Surov$^{1}$
-  \thanks{
-    $^{1}$Maksim Surov is with Department of Information Technologies and AI, 
-    Sirius University of Science and Technology, 
-    Sochi, Russia
-    {\tt\small surov.m.o@gmail.com}
-  }
-}
 
 \theoremstyle{plain}
 \newtheorem{thm}{\protect\theoremname}
@@ -40,6 +35,24 @@
 \providecommand{\lemmaname}{Lemma}
 \providecommand{\remarkname}{Remark}
 \providecommand{\theoremname}{Theorem}
+
+\title{
+    Virtual Holonomic Constraints in Motion Planning: \\
+    Revisiting Feasibility and Limitations
+}
+
+\author{
+  Maksim Surov$^{1}$
+  % \thanks{
+  %   *This work was not supported by any organization
+  % }
+  \thanks{
+    $^{1}$Maksim Surov is with Department of Information Technologies and AI, 
+    Sirius University of Science and Technology, 
+    Sochi, Russia
+    {\tt\small surov.m.o@gmail.com}
+  }
+}
 
 \begin{document}
   \maketitle
@@ -145,6 +158,7 @@
     the possibility of trajectory stabilization. 
     Furthermore, limiting our analysis to VHCs that satisfy Definition~\ref{def:VHC} 
     may result in a fundamental misjudgment of the broader set of stabilizable trajectories.
+    % может сузить класс
 
     In Section~\ref{sec:pvtol-trajectory}, we examine an example of a periodic trajectory of the PVTOL aircraft and prove that there {\bf exists no VHC} satisfying
     Definition~\ref{def:VHC} associated with this trajectory. For this trajectory we also demonstrate the existence of a state feedback providing orbital asymptotic stability.
@@ -174,6 +188,7 @@
 
     \begin{figure}
       \begin{centering}
+        \vspace{4pt}
         \includegraphics[width=8.5cm]{fig/pvtol_gen_coord_and_tictoc}
       \par\end{centering}
       \caption{PVTOL aircraft: generalized coordinates and tic-toc maneuver schematically.}
@@ -316,8 +331,8 @@
     Observing that the vector $G$ does not lie in 
     $\mathrm{Im}\left[B\left(q_{0}\right)\right]$,
     we conclude that $Ndh\left(q_{0}\right)G$ is nonzero. Therefore, the equation~(\ref{eq:dq_constr}) can only hold for specific values of
-    $\dot{q}$, namely $\dot{q}=\pm\dot{q}_{0}$. However, if we consider $\dot{q}=0\in T_{q_{0}}\mathcal{Q}$, the second term of~(\ref{eq:dq_constr}) vanishes, causing the equality to be violated.
-    This contradicts the requirement that~\eqref{eq:dq_constr} must hold for all $\dot{q} \in T_{q_{0}} \mathcal{Q}$.
+    $\dot{q}$, namely $\dot{q}=\pm\dot{q}_{0}$. However, if we consider $\dot{q}=0\in T_{q_{0}}\mathcal{C}$, the second term of~(\ref{eq:dq_constr}) vanishes, causing the equality to be violated.
+    This contradicts the requirement that~\eqref{eq:dq_constr} must hold for all $\dot{q} \in T_{q_{0}} \mathcal{C}$.
     Therefore, we conclude that $\Gamma$ is \textbf{not a controlled invariant manifold}. \qed
 
     This general result can also be verified by the reader through direct computation using a specific candidate for the VHC, such as
@@ -372,9 +387,9 @@
     \end{equation}
     Linearizing~(\ref{eq:transverse-dynamics-2}) with respect to $\rho$ and $w$ yields:
     \[
-      \frac{d\rho}{d\tau}=A\left(\tau\right)\rho+B\left(\tau\right)w+O\left(\tau,\rho,w\right),
+      \frac{d\rho}{d\tau}=A\left(\tau\right)\rho+B\left(\tau\right)w+o\left(\tau,\rho,w\right),
     \]
-    where the function $O\left(\tau,\rho,w\right)$ collects all bilinear, quadratic and higher-order terms in $\rho$ and $w$; the matrix functions
+    where the function $o\left(\tau,\rho,w\right)$ collects all bilinear, quadratic and higher-order terms in $\rho$ and $w$; the matrix functions
     \begin{align*}
       A\left(\tau\right) &:= \left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial\rho}\right)_{\rho=0,w=0}\quad\text{and}\quad \\
       B\left(\tau\right) &:= \left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial w}\right)_{\rho=0,w=0}
@@ -418,6 +433,7 @@
     \end{figure}
     \begin{figure}
       \begin{centering}
+        \vspace{4pt}
         \includegraphics[width=7.5cm]{fig/pvtol_transverse}
       \par\end{centering}
       \caption{Evolution of transverse coordinates and control inputs versus trajectory projection $\tau$ in the closed loop system.}\label{fig:pvtol-transverse}
@@ -490,9 +506,9 @@
           and $\beta\left(\theta\right),\gamma\left(\theta\right)\in C^{2}\left(I\right)$;
         \item
           the function $\alpha\left(\theta\right)$ has a unique zero on the
-          interval $\exists!\,\theta_{s}\in I:\alpha\left(\theta_{s}\right)=0$;
+          interval: $\exists!\,\theta_{s}\in I:\alpha\left(\theta_{s}\right)=0$;
         \item
-          the following inequalities hold true 
+          the following inequalities hold true:
           \[
             \alpha'\left(\theta_{s}\right)>0,\quad\gamma\left(I\right)>0,\quad\frac{\beta\left(\theta_{s}\right)}{\alpha'\left(\theta_{s}\right)}<-\frac{1}{2}.
           \]
@@ -666,7 +682,7 @@
     Furthermore, restricting the term \textit{feasible} to a narrow class of VHCs can be misleading.
     Under such a definition, a VHC might be labeled ``non-feasible''
     even when it successfully generates fully realizable trajectories -- creating a contradiction in terms.
-    In our view, the requirement of controlled invariance in Definition~\ref{def:VHC}
+    To resolve this terminological inconsistency, the requirement of controlled invariance in Definition~\ref{def:VHC}
     should instead be replaced with a condition ensuring the existence of a solution to 
     the mechanical system along which the constraint relation holds.
 
