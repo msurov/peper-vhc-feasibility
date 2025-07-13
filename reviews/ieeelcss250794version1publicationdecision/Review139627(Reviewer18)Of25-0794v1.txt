@@ -1,0 +1,79 @@
+	The abstract does not mention the scope of the results or any
+methodology to address or remove the identified deficiency.
+
+
+Therefore, it is primarily descriptive and lacks any indication of novelty or a proposed solution.
+It highlights the existence of certain stabilizable trajectories that do not fit within the conventional VHC framework,
+but does not articulate a new method, theoretical extension, or design innovation to address this issue.
+- Это ошибочное утверждение. Новый метод представлен.
+
+The sentence stating that “a typical criterion is the existence of stabilizing feedback which ensures that the planned motion can be executed on a physical system” appears to be incomplete in the context of underactuated mechanical systems. While such a criterion is indeed relevant, it is important to emphasize that, in underactuated systems, the mere existence of a stabilizing feedback law is not sufficient. For a motion plan to be truly feasible, the associated zero dynamics must also be stable.
+- Откуда ты эту глупость взял? Подобные утверждения стоит подкреплять ссылками на публикации.
+
+ It is therefore recommended that the authors clarify this important aspect, particularly given the focus of the paper on systems with a single degree of under actuation.
+
+Please clarify whether the “closed-loop system” mentioned in
+Definition 1 specifically refers to system (1).
+- я привожу чужое определение, почему я должен пояснять?!
+
+It is recommended to move Figures 1 and 2 after the relevant
+discussion in the main text, rather than placing it beforehand. This adjustment would improve the logical flow of presentation and help readers interpret the figure with the necessary context.
+- очень серьёзное замечание
+
+In the sentence “According to [8, Chapter 6], the set &#915; is
+controlled invariant if and only if, for every …”, the reference to an
+entire chapter may be too vague for a claim of this specificity.
+Moreover, I was unable to locate a statement in Chapter 6 of [8] that
+explicitly supports the equivalence claimed by the authors.
+- не дочитал до конца первую страницу главы?
+
+For better clarity and traceability, especially when referring to precise
+mathematical conditions such as controlled invariance, it is advisable
+to cite a specific theorem or lemma rather than an entire chapter.
+This would help readers and reviewers verify the claim more efficiently.
+please point me to the exact location (e.g., theorem number or page) in
+[8] where your statement—specifically the “if and only if”
+characterization of controlled invariance-is formally stated.
+- конец первой страницы
+
+In the paragraph following “We define the new coordinates as…”,
+the trajectory x^* (&#964;) is referenced without an explicit
+definition of its functional form.
+For clarity and completeness, it is
+important to define it at once after call it-for example, if x^*
+(&#964;)=sin&#8289;&#12310;(&#964;)&#12311;, this should be explicitly
+stated. 
+	In your construction of the transverse coordinates, you define
+&#964;:=atan2(x,x &#775;) and claim that the transformation (q,q
+&#775;)&#8614;(&#964;,&#961;) is diffeomorphic within a tubular
+neighborhood of the orbit. However, since atan2(x,x &#775;) is
+undefined when x &#775;=0, it appears that the transformation may
+become singular at such continues points. This raises the question:
+Could you please clarify how you handle the singularity at x &#775;=0
+for arbitrary x, and whether the transformation remains diffeomorphic
+in a strict mathematical sense throughout the entire neighborhood?
+- там же написано: "within a tubular neighborhood"
+
+Furthermore, considering that the feedback control law (11) is
+expressed in terms of &#964;(q,q &#775;), what happens to the control
+input u(q,q &#775;) near such continuous singular points?
+- Регулятор обеспечивает локальную устойчивость.
+
+In particular, in Section D, you initialize the simulation with x
+&#775;=0, which corresponds to a singularity of the transformation.
+- I do not initialize x with 0. Where did you get it?
+
+The manuscript predominantly cites works published before 2016.
+It would benefit from including more recent literature to better
+reflect the current state of research in the field and to contextualize
+the contributions with respect to the latest developments
+For instance, the paper "Dynamic virtual holonomic constraints for stabilization of closed orbits in underactuated mechanical systems" could provide useful insights and a contemporary perspective closely
+related to the topic.
+The formatting of the references is inconsistent. 
+
+Please ensure
+that all citations are presented in a uniform style and fully conform
+to the journal’s formatting requirements. Additionally, verify that the
+formatting and in-text referencing of figures, tables, and equations
+adhere to the journal's submission guidelines.
+- yes, for the final version.. wtf?

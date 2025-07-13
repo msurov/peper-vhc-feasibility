@@ -259,7 +259,7 @@
     by 
     \begin{align}
     \label{eq:ddot_y}
-      \dot{y} & =L_{\dot{q}}h\left(q\right)\nonumber \\
+      \dot{y} & = L_{\dot{q}}h\left(q\right)\nonumber \\
       \ddot{y} & =dh\left(q\right)\left(B\left(q\right)u-G\right)+L_{\dot{q}}^{2}h\left(q\right).
     \end{align}
     According to~\cite[Chapter 6]{Isidori-1995}, the set $\Gamma$ is controlled invariant if and only if, for every $\left(q,\dot{q}\right)\in\Gamma$,
@@ -327,21 +327,70 @@
     \end{equation}
     or any other function $h\left(q\right)$ that satisfies  $h\left(q_{*}\left(t\right)\right)\equiv0$
     and has $\mathrm{rank}\,dh\left(q\right)=2$ on $\mathcal{C}$.
+
+  \subsection{Trajectory Stabilizability}
     The arguments above naturally raise the question of the practical realizability of such a trajectory in a physical system, particularly in the presence of model uncertainties. One might question whether the strong requirement of passing the system through the given configuration $q_{0}$ with a precisely specific velocity is feasible, as it may appear unrealistic in practice.
     However, this requirement is a direct consequence of imposing a VHC that constrains the system to move along a prescribed direction. In real-world scenarios, slight deviations from the VHC allow the system to traverse the corresponding configuration $q_{0}$ with a range of possible velocities.
 
-    The existence of a stabilizing feedback for the trajectory~(\ref{eq:ref-traj}) follows directly from~\cite[Theorem4]{Nam-1992}, as the dimension of the corresponding Lie algebra for the PVTOL aircraft equals 6 for almost all points along the reference orbit.
-    Alternatively, one can design a state feedback controller using the transverse linearization approach with the transverse coordinates defined as in~\cite{Surov-2020}.
-
-    In this article, we restrict ourselves to presenting the results of computer simulation, available at~\url{https://youtube.com/shorts/EM2qfht1D74}, where we used the transverse coordinates $\tau \in [-\pi, \pi), \rho \in \mathbb{R}^5$, defined as
+    An asymptotically orbitally stabilizing feedback can be constructed using the transverse linearization approach~\cite{Banaszuk-1995,Surov-2020}, wherein the dynamics~(\ref{eq:pvtol-dynamics}) are expressed in new local coordinates
+    $\tau \in S^1$ and $\rho \in \mathbb{R}^5$, which are diffeomorphic to $(q, \dot q)$ within a tubular neighborhood of the reference orbit.
+    Although various coordinate transformations can serve this purpose (see, for example,~\cite{Surov-2020}), we aim to show that the VHC~(\ref{eq:implicit-vhc-candidate}) is also suitable, even though it does not satisfy Definition~\ref{def:VHC}. We define the new coordinates as
     \begin{align*}
       & \tau:=\mathrm{atan2}\left(x,\dot{x}\right),\quad\rho_{1,2}:=h\left(q\right),\quad\rho_{3,4}:=L_{\dot{q}}h\left(q\right),\\
       & \rho_{5}:=\left(x-x_{*}\left(\tau\right)\right)\sin\tau+\left(\dot{x}-\dot{x}_{*}\left(\tau\right)\right)\cos\tau
     \end{align*}
-    with the VHC $h(q)$ as in~(\ref{eq:implicit-vhc-candidate}), together with the new control input
-    $
+    along with the new control input 
+    \[
       w:=u-u_{*}\left(\tau\right).
-    $
+    \]
+    The variables $\rho\equiv\left(\rho_{1},\dots,\rho_{5}\right)^{\top}$
+    serve as transverse coordinates, meaning they vanish when the phase space point lies on the reference orbit.
+    The coordinate $\tau \in [-\pi, \pi)$ represents
+    projection of the phase space point onto the reference trajectory.
+    It is straightforward to verify that the transformation $\left(q,\dot{q}\right)\mapsto\left(\tau,\rho\right)$
+    is diffeomorphic within a tubular neighborhood of the orbit. This implies the existence of inverse transformation $\left(q,\dot{q}\right)=\mu\left(\rho,\tau\right)$
+    allowing the dynamics~(\ref{eq:pvtol-dynamics}) to be expressed as
+    \begin{equation}
+    \label{eq:transverse-dynamics-1}
+      \frac{\partial\mu\left(\rho,\tau\right)}{\partial\left(\rho,\tau\right)}\left(\begin{array}{c}
+      \dot{\rho}\\
+      \dot{\tau}
+      \end{array}\right)=\left(\begin{array}{c}
+      \dot{q}\\
+      B\left(q\right)u_{*}\left(\tau\right)-G+B\left(q\right)w
+      \end{array}\right).
+    \end{equation}
+    Next, we substitute the transformation $\left(q,\dot{q}\right)=\mu\left(\rho,\tau\right)$
+    into the right-hand side of~(\ref{eq:transverse-dynamics-1})
+    and solve for $\dot{\rho}$ and $\dot{\tau}$. Since the transformation is diffeomorphic, the Jacobian matrix is invertible, ensuring the validity of this step. Moreover, we observe that $\dot \tau > 0$ within a tubular neighborhood and bounded input $w$, which justifies -- following~\cite{Banaszuk-1995} -- dividing $\dot{\rho}$ by $\dot{\tau}$ to obtain the transverse dynamics in the form of a general nonlinear system:
+    \begin{equation}
+    \label{eq:transverse-dynamics-2}
+      \frac{d\rho}{d\tau}=f\left(\rho,\tau,w\right).
+    \end{equation}
+    Linearizing~(\ref{eq:transverse-dynamics-2}) with respect to $\rho$ and $w$ yields:
+    \[
+      \frac{d\rho}{d\tau}=A\left(\tau\right)\rho+B\left(\tau\right)w+o\left(\tau,\rho,w\right),
+    \]
+    where the function $o\left(\tau,\rho,w\right)$ collects all bilinear, quadratic and higher-order terms in $\rho$ and $w$; the matrix functions
+    \begin{align*}
+      A\left(\tau\right) &:= \left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial\rho}\right)_{\rho=0,w=0}\quad\text{and}\quad \\
+      B\left(\tau\right) &:= \left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial w}\right)_{\rho=0,w=0}
+    \end{align*}
+    are periodic with period $2\pi$.
+    Based on the arguments in~\cite[Theorem~1]{Yakubovich-1986}, the controllability of the LTV system 
+    \begin{equation}
+      \frac{d\bar{\rho}}{d\tau}=A\left(\tau\right)\bar{\rho}+B\left(\tau\right)w\label{eq:linearized-transverse-dynamics}
+    \end{equation}
+    over one period implies the existence of an exponentially stabilizing feedback of the form $w\left(\tau,\bar\rho\right)=K\left(\tau\right)\bar\rho$ with a $2\pi$-periodic matrix of feedback gains $K\left(\tau\right):\mathbb{R}\to\mathbb{R}^{2\times5}$.
+    Moreover, as shown in~\cite{Leonov-2006}, the exponential stability of the transversally linearized system guarantees the asymptotic orbital stability of the reference trajectory for the original nonlinear system.
+    Following these arguments, we propose the feedback control law
+    \begin{equation}
+    \label{eq:nonlinear-control}
+      u(q,\dot q) = u_{*}\left(\tau(q,\dot q)\right) + K\left(\tau(q,\dot q)\right) \rho(q, \dot q)
+    \end{equation}
+    to achieve orbital stabilization of the reference trajectory~(\ref{eq:ref-traj}).
+
+    The conducted numerical analysis demonstrated the controllability of the LTV system, and hence confirmed the existence of a periodic stabilizing solution to the LQR problem. The stability of the nonlinear closed-loop system was verified through computer simulations, the results of which are presented in the following video:~\url{https://youtube.com/shorts/EM2qfht1D74}.
 
   \section{Singular Reduced Dynamics}
   \label{sec:non-regular-vhc}
@@ -487,9 +536,9 @@
     and $\gamma\left(\theta_{s}\right)$ have opposite signs, then
     the mechanical system at the configuration 
     $q_{s}=\phi\left(\theta_{s}\right)$
-    can move along the direction $\phi'\left(\theta_{s}\right)$, but
+    can move along the direction $\phi'\left(\theta_{s}\right)$ (under additional requirements), but
     only with a specific velocity given by:
-    $\dot{q}_{s}=\pm\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}\phi'\left(\theta_{s}\right).$
+    $\dot{q}_{s}=\pm\sqrt{-\gamma\left(\theta_{s}\right)/\beta\left(\theta_{s}\right)}\phi'\left(\theta_{s}\right)$.
 
     A similar result is obtained when considering an implicit VHC $h\left(q_{*}\left(t\right)\right)\equiv0$.
     In this case, the admissible velocity $\dot{q}_{s}$ can be determined by imposing the conditions
@@ -671,16 +720,6 @@
       Regular and Chaotic Dynamics,
       2006, Volume 11, Number 2, pp. 281-289.
 
-    \bibitem{Kalman-1960-optimal-control}
-      R.E. Kalman,
-      Contributions to the Theory of Optimal Control. Matematica Mexicana, 1960, 5, 102-119. 
-
-    \bibitem{Gusev-2010}
-       S. Gusev, S. Johansson, B. Kågström, et al,
-       A numerical evaluation of solvers for the periodic Riccati differential equation,
-       Bit Numer Math 50, 301–329 (2010),
-       doi: 10.1007/s10543-010-0257-5.
-
     \bibitem{Shiriaev-2006-periodic-planning}
       A. Shiriaev, A. Robertsson, J. Perram, A. Sandberg,
       Periodic motion planning for virtually constrained Euler-Lagrange systems,
@@ -692,12 +731,12 @@
       2018 IEEE Conference on Decision and Control (CDC), Miami, FL, USA, 2018, pp. 6900-6905,
       doi: 10.1109/CDC.2018.8618669.
 
-    \bibitem{Nam-1992}
-      K. Nam and A. Arapostathis, 
-      A sufficient condition for local controllability of nonlinear systems along closed orbits,
-      in IEEE Transactions on Automatic Control, vol. 37, no. 3, pp. 378-380, March 1992, 
-      doi: 10.1109/9.119642. 
+    % \bibitem{Nam-1992}
+    %   K. Nam and A. Arapostathis, 
+    %   A sufficient condition for local controllability of nonlinear systems along closed orbits,
+    %   in IEEE Transactions on Automatic Control, vol. 37, no. 3, pp. 378-380, March 1992, 
+    %   doi: 10.1109/9.119642. 
 
   \end{thebibliography}
-    
+
 \end{document}

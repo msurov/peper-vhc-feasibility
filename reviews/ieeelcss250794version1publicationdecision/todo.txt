@@ -1,0 +1,23 @@
+	The abstract does not mention the scope of the results or any
+methodology to address or remove the identified deficiency.
+
+* явно прописать в abstract основной результат
+  [The abstract does not mention the scope of the results]
+
+* выделить утверждение об отсуствии инвариантного многообразия в Proposition? Claim?
+* поправить определение трансверсальных координат
+In the paragraph following “We define the new coordinates as…”,
+the trajectory x^* (&#964;) is referenced without an explicit
+definition of its functional form.
+For clarity and completeness, it is
+important to define it at once after call it-for example, if x^*
+(&#964;)=sin&#8289;&#12310;(&#964;)&#12311;, this should be explicitly
+stated. 
+* посмотреть статью "Dynamic virtual holonomic constraints for stabilization of closed orbits in underactuated mechanical systems"
+
+1. Выделить основной результат статьи, оформить в виде теоремы. Например, утверждение о том, что при наличии проходимой сингулярности нет инвариантного многообразия. Тогда во введении нужно указать, что в предыдущих публикациях не было указано, что сингулярность обязательно приводит к отсутствию инвариантного многообразия. А тут мы доказываем.
+2. Добавить пункт про стабилизируемость всех решений, а не только одного
+3. Написать своё определение виртуальных связей.
+4. В абстракт написать основной результат: сформилированы условия нарушения инвариантности constraint-manifold, предложено новое определение.
+5. Чуть переделать главу Example: PVTOL Aircraft Trajectories. Нужно переименовать exploration of irregular trajectories of PVTOL...
+6. После теоремы с отсутствием инвариантного многообразия пишу раздел. В нём даю новое определение ВС. Далее привожу пример: если следовать новому определению, то можно ввести ВС и найти много новых траекторий.

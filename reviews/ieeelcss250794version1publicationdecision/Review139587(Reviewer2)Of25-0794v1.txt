@@ -1,0 +1,116 @@
+The author presents an example of a mechanical systems (the PVTOL
+aircraft) and a specific configuration trajectory that cannot be
+represented as a trajectory of the reduced dynamics arising from a
+virtual holonomic constraint (VHC).
+- That's not true. It can be.
+
+Then the author argues that the linearization of the mechanical system along this trajectory is
+controllable so it is possible to locally asymptotically stabilize the trajectory.
+
+The author then uses these conclusions to argue that the current definition of VHC in the literature is too restrictive because there
+are situations like the one that he described, in which there is a stabilizable trajectory lying on a manifold that is not controlled
+invariant.
+
+Finally, the author revisits results in the literature concerning
+second order differential equations with singularities to argue that
+under certain special
+conditions, there may still be feasible trajectories of the reduced
+dynamics, even though said reduced dynamics have singularities. This is
+not a contribution of the paper since the result of Theorem 1 is in the
+literature.
+- It is the contribution, "Theorem 1" has never been presented before.
+
+I appreciate the analysis of the author and I understand his criticism
+of the definition of VHC, but I think that the point made by the author
+is confusing and it should be clarified. What exactly is the main
+message of the paper?
+
+Is the message of the paper that VHCs do not produce the universe of
+all stabilizable trajectories of a mechanical system? But this was
+already made clear by early work of Shiriaev and colleagues. 
+* give me the reference to the work. Shiriaev is my collegue. If he wrote something, he would let me know.
+
+Is the author then trying to reinforce the message? If so, the author should
+reframe his presentation to highlight how VHCs restrict the universe of
+stabilizable trajectories, and not to criticize the definition of VHC.
+* I did it. Did you read the chapter III?
+
+Or perhaps is the message of the paper that the current definition of
+VHC should be changed? But then the author has the onus to present a clear and mathematically rigorous definition of
+VHC.
+* I've presented the changes in the concolusion.
+
+Surprisingly, this paper does not present an alternative
+definition. 
+* This is incorrect. You just didn't read the paper.
+
+If I try to reverse engineer the definition of VHC that the author has
+in mind I get genuinely confused. The terminology virtual holonomic
+constraint should suggest that a VHC should mimic a standard holonomic
+constraint in mechanics. Otherwise, why call it a virtual holonomic
+constraint?
+* No, it should not. The abbreviation was invented 30 years ago by the 
+people who didn't expect how broad the concept can be.
+
+A standard holonomic constraint, h(q)=0, defines an invariant
+set in the state space of the mechanical system with the property that
+any initial condition such that the initial configuration satisfies the
+constraint and the initial velocity is tangent to it, gives a solution
+satisfying the constraint at all time.
+* This is incorrect. The reader does not know what holonomic constraints are, he mismatches with non-holonomic constraints.
+
+In other words, if q(t) is a configuration trajectory satisfying the holonomic constraint, the initial condition
+(q(0), \lambda*\dot q(0)) will produce another solution satisfying the constraint for any scalar lambda. 
+* This is not related to the discussion.
+
+For example, a train is constrained to stay on a rail, but there no
+constraint on the initial tangential velocity to the rail. 
+* Good bye.
+
+A second important property of holonomic constraints in Mechanics is
+that they produce a well-defined reduced dynamical system representing
+the constrained motion. The dimension of this reduced system is
+precisely 2*(dimension of the configuration space - number of
+constraints).
+We are not talking about constraints. We are talking about very specific object "virtual" constraints, which are not related to mechanical constraints. And such analogies do not work.
+
+When we endeavoured to formalize a definition of VHC, our aim was to
+mimic as much as possible the above features, but we never claimed that
+our notion would produce the universe of all stabilizable configuration
+trajectories of a controlled mechanical system. 
+* You guys made a mistake. If you wanted to introduce the definition, you could use "VHC of Maggiore type".
+
+In the author's argument, there is a surface h(q)=0, where 0 is a
+regular value of h (at least in the example!), whose tangent bundle
+(let's call it constraint
+manifold) is *not* controlled invariant. The tangent map of h, i.e.,
+the pair (h(q), dh_q \dot q), is then used
+to produce "transverse coordinates" for the linearization along a
+*specific* state trajectory. 
+Since controlled invariance does not hold, the constraint manifold will not be the union of trajectories of the
+controlled mechanical system. 
+I don't understand why do you wich every set to be a manifold. There is a set of phase space which contains a "union of trajectories".
+
+However, there might be one (or some?) trajectory that is entirely contained in it. The conditions reviewed
+by the author are rather specific and concern the existence of *one* controlled trajectory on the constraint manifold.
+- Altough I demonstrated stabilizability of a singule trajectory, in fact, all the trajectories are stabilzabile.
+
+If this is the framework that the author has in mind, why should we
+call h(q)=0 a VHC?
+- Because it allows to discover a huge set of new solutions.
+
+How does it relate to the notion of a holonomic constraint in Mechanics given that it allows situations where there is
+only one feasible trajectory?
+- 1. Forget about mechanics and all the analogies. 2. In the paper I underscore several times, that there is a broad class of such solutions.
+
+In the author's setup, we are not allowed to change the initial velocity of the configuration trajectory
+satisfying the constraint.
+- This is not correct, where did you get it?
+
+If we did change the initial velocity, the
+solution will not satisfy the constraint anymore, no matter what control we chose.
+- No, it will
+
+Again, why should this be called a virtual holonomic constraint?
+
+I encourage the author to pursue his ideas further. As far as this paper is concerned, the main message is unclear.

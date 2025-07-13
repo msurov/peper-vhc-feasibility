@@ -1,0 +1,43 @@
+This work studies the feasibility of virtual holonomic constraints
+(VHCs) in motion planning for underactuated mechanical systems. The
+main objective is to demonstrate that the conventional definition of
+VHCs is restrictive, excluding a broad class of admissible
+trajectories. To illustrate this, the paper considers a periodic motion
+of the Planar Vertical Take-Off and Landing aircraft and shows that no
+VHC satisfying the standard definition can reproduce this motion.
+
+There are several serious concerns regarding this work. 
+First, the current manuscript resembles a report more than a scientific paper. 
+In particular, the introduction is non-standard: it does not clearly
+motivate the problem and instead includes a substantial amount of
+mathematics, even including a formal definition within the
+introduction.
+- What does "standard introduction" mean?
+
+Additionally, many parts of the introduction are highlighted in bold, further reinforcing the report-like appearance.
+- I can demonstrate tens of published papers with the same style.
+
+The references are grouped without elaborating on their significance or details, and the notation part is presented using bullet points, which is uncommon and consumes excessive space.
+- Is this a "serious concerns"? If usage the "bullet points" is such a "serious concerns" as others, then the paper must has been well-written.
+
+Another serious concern relates to the technical contribution of the
+paper. There is no concrete result; the author only demonstrates,
+through a specific case study, that no VHC satisfies the conventional
+definition.
+- Not only. The reviewer didn't read the paper.
+
+However, this observation does not lead to any general insight, and the author does not propose any solution to address this
+limitation.
+- The solution is presented. The reviewer didn't read the conclusion.
+
+The only formal result is Theorem 2, which shows the existence of a singularity in the reduced model, which is very straightforward.
+- "only formal result" the reviewer has found is Theorem 2. If this theorem is straightforward, it does not imply that it is not novel.
+
+In addition to the issues with the introduction, the paper is not well written overall. 
+There are some typos throughout the manuscript (for example in Theorem 1).
+- If the reviewer found typos, it would make sense to specify them. 
+
+The formal statements throughout the paper have also not been properly motivated.
+
+Given these critical issues, the reviewer believes that the current manuscript is far from meeting the standards of LCSS and does not recommend it for publication.
+- Remember, the critical issues are the "non-standard introduction" and "using bullet points".
