@@ -1,0 +1,31 @@
+The paper discusses the existence of virtual holonomic constraints that
+do not satisfy the controlled invariance condition of Definition 1.
+
+The topic is interesting  and relevant. Condition 1 considerably
+simplifies the discussion of the reduced dynamics, since it avoids
+singularities, such as $\alpha(\theta)=0$ in (12). However, it is
+certainly true that constraints not satisfying condition 1 can still
+be satisfied by some solutions, as shown in the PVTOL example.
+
+Anyway, the paper contribution is not clear. In particular, reference
+[14]
+already presents a virtual constraint for the Furuta pendulum in which
+Definition 1 is not satisfied, since $\alpha$ crosses 0. The fact that
+$ \alpha$ crosses 0 and that Definition 1 is not satisfied are
+equivalent. See also
+Christian Fredrik Sætre, Anton Shiriaev, "Orbital stabilization of
+point-to-point maneuvers in underactuated mechanical systems",
+Automatica, Volume 147, 2023.
+
+Also, the method for orbital stabilization presented in the
+paper is not new.  In general, in my opinion, the paper lacks a clear
+new contribution and the proposed material is not sufficient for
+publication.
+
+Moreover, some of the material of this paper has already been published
+in:
+
+Surov, M. Singular motion generators in the problem of motion planning
+for underactuated mechanical systems. Nonlinear Dyn (2025). 
+
+This paper has not even been cited.

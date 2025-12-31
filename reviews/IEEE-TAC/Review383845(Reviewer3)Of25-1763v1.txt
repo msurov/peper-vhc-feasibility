@@ -1,0 +1,45 @@
+This paper shows that the conditions assumed to be necessary for
+constructing virtual holonomic constraints (VHC) in many references in
+the literature are, in fact, only sufficient and restrictive. While the
+paper is (mostly) well-written and mathematically rigorous, more
+discussion and context are necessary to understand and evaluate the
+relevance of the results, especially what these results mean for motion
+planning and path-following. My specific comments, in order of
+importance, are as follows:
+
+[C1] It seems clear from the analysis that characterizing (or defining)
+VHCs through Definition 1 is restrictive. However, what is unclear to
+this reviewer is the implications of this. On the one hand, the author
+acknowledges that several references have a more general (and to some
+extent appropriate) definition of VHC, implying that not all the
+existing literature has adopted an inadequate approach to defining
+VHCs. On the other hand, it is unclear how proposing a more general
+definition of VHCs "advances" the study of motion planning and
+path-following. In other words, the problem highlighted by the author
+pertains only to VHCs, but there are other approaches to generate
+trajectories or paths. For instance, the one adopted in
+constraint-following (servo) control. In this sense, I think it is
+essential to discuss how a more general definition of VHCs situates
+this approach in the field of motion planning. A possibly good starting
+point for this discussion is to compare the general definition of VHCs
+with the construction of the constraints proposed in:
+- Ye-Hwa Chen "Constraint-following Servo Control Design for Mechanical
+Systems" Journal of Vibration and Control
+[C2] Assuming that Theorem 1 is relevant, why is there no proof? I
+could not find the proof in [14] either.
+[C3] The adjoint (in this case, the Lie bracket) ad_{f}g_{i} needs to
+be defined in the notation. 
+[C4] The equivalent/identical symbol (three horizontal lines) is used
+to define expressions in the paper. A symbol that denotes definition
+(e.g., ':=' or the equal with a triangle on top) seems more
+appropriate. 
+[C5] The acronym PVTOL is not used in the abstract and should be
+removed. Then, it must be defined in the main text.
+[C6] The statements in Theorems 1 and 2 exhibit minor details. In the
+former, "Let us consider" can/should be reduced to "Consider."
+Similarly, "with the coefficients" --> "with coefficients," "Then, for
+any" --> "For any" ("The" is rarely used after a period in a
+mathematical statement). In Theorem 2, "trajectory to the system" -->
+"trajectory of the system." "Then, for any" --> "For any." 
+[C7] The first element of eigvalsW(0,2/pi) reads 744. Is there
+something after the period?

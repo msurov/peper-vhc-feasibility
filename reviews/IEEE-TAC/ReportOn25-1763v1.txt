@@ -1,0 +1,12 @@
+In this paper, the author examines the existence of virtual holonomic
+constraints (VHCs) that do not meet the controlled invariance condition
+as outlined in Definition 1. While the topic is intriguing and
+relevant, the manuscript reads more like a technical report
+demonstrating that the conditions for VHCs are sufficient, rather than
+presenting new research advances in the field. The main theoretical
+results of the paper are Theorems 1 and 2. It is important to note that
+Theorem 1 is sourced from [14], while Theorem 2 is more of a remark
+than a formal theorem. This remark highlights that the "regularity"
+condition of VHCs limits the class of trajectories that can be
+stabilized using the VHC method. This limitation is already well-known
+from the work of Shiriaev, published two decades ago.

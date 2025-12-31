@@ -1,10 +1,65 @@
-\documentclass[letterpaper,10pt,conference]{ieeeconf}
-\IEEEoverridecommandlockouts
-\overrideIEEEmargins
+\documentclass[alpha-refs]{wiley-article}
 
-% \documentclass[journal,twoside,web]{ieeecolor}
-% \usepackage{lcsys}
-% \usepackage{cite}
+\usepackage{graphicx}
+\usepackage[space]{grffile}
+\usepackage{latexsym}
+\usepackage{textcomp}
+\usepackage{longtable}
+\usepackage{tabulary}
+\usepackage{booktabs,array,multirow}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=false,pdfborder={0 0 0}}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\@combinedblfloats{\box\@outputbox}{\unvbox\@outputbox}{}{
+  \errmessage{\noexpand\@combinedblfloats could not be patched}
+}
+\makeatother
+\newif\iflatexml\latexmlfalse
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\AtBeginDocument{
+  \DeclareGraphicsExtensions{
+    .pdf,.PDF,.eps,.EPS,.png,.PNG,.tif,.TIF,.jpg,.JPG,.jpeg,.JPEG
+  }
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{siunitx}
+\usepackage{lineno}
+
+\linenumbers
+
+\renewcommand{\sfdefault}{ptm}
+\renewcommand{\familydefault}{\sfdefault}
+
+% \paperfield{Control Theory}
+% \corraddress{Author One PhD, Department, Institution, City, State or Province, Postal Code, Country}
+\corremail{surov.m.o@gmail.com}
+% \presentadd{Department, Institution, City, State or Province, Postal Code, Country}
+% \fundinginfo{Funder One, Funder One Department, Grant/Award Number: 123456, 123457 and 123458; Funder Two, Funder Two Department, Grant/Award Number: 123459}
+
+\papertype{Original Article}
+
+\title{
+  Virtual Holonomic Constraints in Motion Planning: \\
+  Revisiting Feasibility and Limitations
+}
+
+\author[1]{Maksim Surov}
+
+\affil[1]{
+  Maksim Surov is with Department of Information Technologies and AI, 
+  Sirius University of Science and Technology, 
+  Sochi, Russia
+  {\tt\small surov.m.o@gmail.com}
+}
+
+\runningauthor{Maksim Surov}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -18,7 +73,6 @@
 \let\endproof\relax
 \usepackage{amsthm}
 \usepackage{url}
-
 
 \theoremstyle{plain}
 \newtheorem{thm}{\protect\theoremname}
@@ -46,42 +100,19 @@
 \providecommand{\remarkname}{Remark}
 \providecommand{\theoremname}{Theorem}
 
-\title{
-    Virtual Holonomic Constraints in Motion Planning: \\
-    Revisiting Feasibility and Limitations
-}
-
-\author{
-  Maksim Surov$^{1}$
-  % \thanks{
-  %   *This work was not supported by any organization
-  % }
-  \thanks{
-    $^{1}$Maksim Surov is with Department of Information Technologies and AI, 
-    Sirius University of Science and Technology, 
-    Sochi, Russia
-    {\tt\small surov.m.o@gmail.com}
-  }
-}
 
 \begin{document}
   \maketitle
-  \thispagestyle{empty}
-  \pagestyle{empty}
+  \selectlanguage{english}
 
   \begin{abstract}
     This paper addresses the feasibility of virtual holonomic constraints (VHCs) in the context of motion planning for underactuated mechanical systems with a single degree of underactuation. 
-    While existing literature has established a widely accepted definition of VHC,
-    we argue that this definition is overly restrictive and excludes a broad class of admissible trajectories from consideration.
-    To illustrate this point, we analyze a periodic motion of the Planar Vertical Take-Off and Landing (PVTOL) aircraft that satisfies all standard motion planning requirements, including orbital stabilizability. However, for this solution -- as well as for a broad class of similar ones -- there exists no VHC that satisfies the conventional definition.
-    We further provide a formal proof demonstrating that the conditions imposed by this definition necessarily fail for a broad class of trajectories of mechanical systems.
-    These findings call for a reconsideration of the current definition of VHCs, with the potential to significantly broaden their applicability in motion planning.
+    While the existing literature has established a widely accepted definition of VHCs, we argue that this definition is overly restrictive and excludes a broad class of admissible trajectories from consideration. To illustrate this point, we consider an example of periodic motion of the planar vertical take-off and landing system that satisfies all standard requirements, including orbital stabilizability. 
+    However, for this solution -- and for many similar ones -- there exists no VHC that satisfies the conventional definition. We further provide a formal proof showing that the constraints imposed by the standard definition necessarily fail for a broad class of trajectories. Finally, we show that an alternative, less restrictive definition -- originally proposed in earlier works but rarely used in practice -- admits such trajectories and thus considerably extends the set of known solutions.
   \end{abstract}
 
   \section{Introduction}
-    
-    In this paper, we consider Euler-Lagrange systems described by the
-    equation
+    In this paper, we consider Euler–Lagrange systems of the form
     \begin{equation}
     \label{eq:lag-sys}
       M\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right)=B\left(q\right)u
@@ -108,7 +139,7 @@
     This method assumes that the desired trajectory $q_{*}\left(t\right)$
     satisfies a geometric constraint of the form $h\left(q_{*}\left(t\right)\right)=0$,
     where $h:\mathbb{R}^{n}\to\mathbb{R}^{n-1}$ is a smooth function
-    with Jacobian $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}$
+    with Jacobian $dh\left(q\right) := \frac{\partial h\left(q\right)}{\partial q}$
     of rank $n-1$ (see, e.g., \cite{Maggiore-2013,Otsason-2019}). Alternatively,
     the VHC can be defined in parametric form $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$,
     where $\theta$ is a scalar parameter and $\phi:\mathbb{R}\to\mathbb{R}^{n}$
@@ -135,7 +166,7 @@
       is smooth, $\mathrm{rank}\,dh\left(q\right)=n-1$ for all
       $q\in h^{-1}\left(0\right)$ and the set 
       \[
-          \Gamma=\left\{ \left(q,\dot{q}\right):h\left(q\right)=0\quad\text{and}\quad\frac{\partial h\left(q\right)}{\partial q}\dot{q}=0\right\} 
+          \Gamma := \left\{ \left(q,\dot{q}\right):h\left(q\right)=0\quad\text{and}\quad\frac{\partial h\left(q\right)}{\partial q}\dot{q}=0\right\} 
       \]
       is \emph{controlled invariant}. That is, there exists a smooth feedback
       $u\left(q,\dot{q}\right)$ such that $\Gamma$ is positively invariant
@@ -146,15 +177,12 @@
     Similar definitions can be found in other publications, including~\cite{Consolini-2011,Otsason-2019,Consolini-2010,Jankuloski-2012,Consolini-2018,Elobaid-2022}.
     In some of these works~\cite{Consolini-2011,Consolini-2010,Jankuloski-2012}, the term \emph{feasible} VHC is used. A common requirement across all these studies is that the entire set $\Gamma$ must be controlled invariant. Moreover, the authors emphasize that the loss of controlled invariance of $\Gamma$ implies the VHC is \emph{not feasible}~\cite[p. 85]{Jankuloski-2012}.
 
-    By contrast, several earlier works propose a more general interpretation of VHCs -- see, for example, \cite{Shiriaev-2005-constructive-tool,Shiriaev-2008}. In particular, the definition in~\cite[p. 204]{Shiriaev-2008} does not require the controlled invariance of $\Gamma$; instead, it merely requires the existence of at least one solution along which the relation $h(q) = 0$ holds.
+    By contrast, several earlier works propose a more general interpretation of VHCs -- see, for example, \cite{Shiriaev-2005-constructive-tool,Shiriaev-2008}. In particular, the definition in~\cite[p. 204]{Shiriaev-2008} does not require the controlled invariance of $\Gamma$; instead, it merely requires the existence of at least one solution along which the relation $h(q) = 0$ holds. 
 
-    The purpose of this publication is to clarify that Definition~\ref{def:VHC} characterizes only a narrow subclass of admissible VHCs and should not be regarded as a general definition.
-    The main result of the paper is formulated in Theorem~\ref{thm:singularity-necessity}, which establishes that the controlled invariance of the manifold $\Gamma$ necessarily fails for a certain class of trajectories of the mechanical system. 
+    The feasibility properties of the related concept of \emph{servo constraints} were also considered in~\cite{Chen-2009}. In Definition~3 therein, the author introduced the \emph{controllability} property of a servo constraint and, in Theorem~4, established conditions under which this property holds. These conditions do not imply the existence of a controlled invariant manifold $\Gamma$.
 
-    We begin our exposition in Section~\ref{sec:pvtol-trajectory} with an example of a periodic trajectory of the PVTOL aircraft that satisfies typical motion planning requirements, including orbital stabilizability. For this trajectory, we demonstrate the absence of any VHC satisfying Definition~\ref{def:VHC}. However, by relaxing the requirement of controlled invariance of $\Gamma$, the VHC-based approach remains applicable for generating the trajectory and constructing a stabilizing feedback control.
-    In Section~\ref{sec:non-regular-vhc}, we examine the motion planning technique proposed in~\cite{Surov-2018}, which is based on singular reduced dynamics, and show that it conflicts with the Definition~\ref{def:VHC}.
-    Section~\ref{sec:pvtol-periodic-trajectories} presents a broad class of periodic trajectories for the PVTOL aircraft, all of which fall outside the scope of Definition~\ref{def:VHC}.
-    Section~\ref{sec:VHC-definitions} provides a comparative analysis of various interpretations of VHCs found in the literature. Finally, Section~\ref{sec:conclusion} offers concluding remarks.
+    In this work, we demonstrate that Definition~\ref{def:VHC} describes only a narrow subclass of VHCs and conflicts with other, more general interpretations. To support this claim, we begin our exposition in Section~\ref{sec:pvtol-trajectory} with an example of a periodic trajectory of the planar vertical take-off and landing (PVTOL) aircraft that satisfies standard motion planning requirements, including orbital stabilizability. For this trajectory, we demonstrate the absence of any VHC satisfying Definition~\ref{def:VHC}. However, by relaxing the requirement of controlled invariance of $\Gamma$, the VHC-based approach remains applicable for generating the trajectory and constructing a stabilizing feedback control. We show that this approach is coherent with existing more general interpretations of VHCs.
+    Generalizing this observation to systems of type~\eqref{eq:lag-sys}, we formulate the main result of the paper in Theorem~\ref{thm:singularity-necessity}, which states that Definition~\ref{def:VHC} necessarily fails for a broad class of trajectories. Section~\ref{sec:VHC-definitions} provides a comparative analysis of various interpretations of VHCs found in the literature and shows that our results are coherent with the more general ones. Section~\ref{sec:pvtol-periodic-trajectories} demonstrates a set of new solutions of the PVTOL system that become available when a more general interpretation of VHCs is adopted. Finally, Section~\ref{sec:conclusion} offers concluding remarks.
 
   \subsection*{Notation}
     In accordance with~\cite{Isidori-1995}, we introduce the following
@@ -162,20 +190,24 @@
     \begin{itemize}
       \item
         The directional derivative of a smooth function $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
-        along a vector field $f\in \mathbb{R}^{n}$ is denoted by $L_{f}h\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}f\left(q\right)\in\mathbb{R}^{k}$.
+        along a vector field $f\in \mathbb{R}^{n}$ is denoted by $L_{f}h\left(q\right) := \frac{\partial h\left(q\right)}{\partial q}f\left(q\right)\in\mathbb{R}^{k}$.
       \item
         The higher-order directional derivatives are defined recursively as:
-        $L_{f}^{l}h\left(q\right)\equiv L_{f}L_{f}^{l-1}h\left(q\right)\in\mathbb{R}^{k}$.
+        $L_{f}^{l}h\left(q\right) := L_{f}L_{f}^{l-1}h\left(q\right)\in\mathbb{R}^{k}$.
+      \item
+        The Lie bracket of two vector fields $f,g \in \mathbb{R}^{k}$ is defined as $\mathrm{ad}_{f} g := L_{f}g - L_{g}f$.
+      \item
+        The Lie bracket of higher order is defined recursievly as $\mathrm{ad}^l_f g := \mathrm{ad}_f (\mathrm{ad}^{l-1}_f g)$.
       \item
         The Jacobian matrix of a function $h:\mathbb{R}^{n}\to\mathbb{R}^{k}$
-        is denoted by $dh\left(q\right)\equiv\frac{\partial h\left(q\right)}{\partial q}\in\mathbb{R}^{k\times n}$.
+        is denoted by $dh\left(q\right) := \frac{\partial h\left(q\right)}{\partial q}\in\mathbb{R}^{k\times n}$.
       \item 
         The column space of a matrix $A$ is denoted by $\mathrm{Im}\left[A\right]$. 
       \item
-        The kernel of a matrix $A\in\mathbb{R}^{n\times m}$ is defined as: $\ker\left[ A\right]\equiv\left\{ x\in\mathbb{R}^{m}\mid Ax=0\right\}.$
+        The kernel of a matrix $A\in\mathbb{R}^{n\times m}$ is defined as: $\ker\left[ A\right] := \left\{ x\in\mathbb{R}^{m}\mid Ax=0\right\}.$
     \end{itemize}
 
-  \section{Motivating Example: Periodic Trajectory of a PVTOL Aircraft}
+  \section{Motivating Example: Periodic Trajectory of PVTOL Aircraft}
   \label{sec:pvtol-trajectory}
 
     \begin{figure}
@@ -241,13 +273,13 @@
       There exists no VHC satisfying Definition~\ref{def:VHC} that can be associated with trajectory~(\ref{eq:ref-traj}). In other words, there does not exist a twice continuously differentiable function $h(q) : \mathbb{R}^3 \to \mathbb{R}^2$ such that:
       \begin{enumerate}
         \item 
-          $h\left(q_{*}\left(t\right)\right)\equiv0$ for all $t \in \mathbb{R}$,
+          $h\left(q_{*}\left(t\right)\right) \equiv 0$ for all $t \in \mathbb{R}$,
         \item 
           $\mathrm{rank}\,dh\left(q\right) = 2$ for all $q \in h^{-1}\left(0\right)$,
         \item 
           the set
           \[
-            \Gamma\equiv\left\{ \left(q,\dot{q}\right)\in\mathbb{R}^{6}\mid h\left(q\right)=0
+            \Gamma := \left\{ \left(q,\dot{q}\right)\in\mathbb{R}^{6}\mid h\left(q\right)=0
              \,\,\text{and}\,\, L_{\dot{q}}h\left(q\right)=0\right\} 
           \]
           is a controlled invariant manifold.
@@ -267,7 +299,7 @@
         \dot{y} &= L_{\dot{q}}h\left(q\right)\nonumber \\
         \ddot{y} &= dh\left(q\right)\left(B\left(q\right)u-G\right)+L_{\dot{q}}^{2}h\left(q\right).
       \end{align}
-      According to the definition of a locally controlled invariant manifold in~\cite[pp.~293-294]{Isidori-1995}, the manifold $\Gamma$ is controlled invariant if and only if, for every $\left(q, \dot{q}\right) \in \Gamma$, there exists a smooth mapping $u : \Gamma \to \mathbb{R}^2$ such that the right-hand side of equation~(\ref{eq:ddot_y}) is identically zero. This condition implies that the following system of linear algebraic equations in $u$ must be solvable for all $\left(q, \dot{q}\right) \in \Gamma$.
+      According to the definition~\cite[pp.~293-294]{Isidori-1995}, the manifold $\Gamma$ is controlled invariant if and only if, for every $\left(q, \dot{q}\right) \in \Gamma$, there exists a smooth mapping $u : \Gamma \to \mathbb{R}^2$ such that the right-hand side of equation~(\ref{eq:ddot_y}) is identically zero. This condition implies that the following system of linear algebraic equations in $u$ must be solvable for all $\left(q, \dot{q}\right) \in \Gamma$:
       \begin{equation}
       \label{eq:linsys-for-u}
         dh\left(q\right)B\left(q\right)u=dh\left(q\right)G-L_{\dot{q}}^{2}h\left(q\right).
@@ -289,7 +321,7 @@
           on $\dot{q}$, while the second term is a quadratic form in $\dot{q}$. This implies that the only way to satisfy condition~(\ref{eq:dq_constr})  is for both terms to vanish: $Ndh\left(q_{0}\right)G=0$ and $NL_{\dot{q}}^{2}h\left(q_{0}\right)=0$
           for all $\dot{q}\in T_{q_{0}}\mathcal{C}$.
       \end{itemize}
-      Let us consider the point $q_{0}\in\mathcal{C}$ given by:
+      Consider the point $q_{0}\in\mathcal{C}$ given by:
       $$
         q_{0}=q_{*}\left(0\right)=\left(0,0,\frac{\pi}{2}\right)^{\top}.
       $$
@@ -303,7 +335,7 @@
         \end{array}\right), \quad \text{that is,} \quad
         \dot{q}_{0}\in\mathrm{Im}\left[B\left(q_{0}\right)\right] .
       \end{align*}
-      The condition $h\left(q_{*}\left(t\right)\right)\equiv0$ implies
+      The condition $h\left(q_{*}\left(t\right)\right) \equiv 0$ implies
       that the rows of $dh\left(q_{0}\right)$ are orthogonal to $\dot{q}_{0}$:
       $dh\left(q_{0}\right)\dot{q}_{0}=0$. 
       Consequently, the matrix $dh\left(q_{0}\right)B\left(q_{0}\right)$ cannot have full rank, hence 
@@ -320,8 +352,7 @@
       Therefore, we conclude that $\Gamma$ is not a controlled invariant manifold.
     \end{proof}
 
-    This general result can also be verified by the reader through 
-    direct computation using a specific candidate for the VHC, such as
+    This general result can also be verified by the reader through direct computation using a specific candidate for the VHC, such as
     \begin{equation}
     \label{eq:implicit-vhc-candidate}
       h\left(q\right)=\left(\begin{array}{c}
@@ -329,7 +360,8 @@
         \psi-\frac{\pi}{2}+\arctan\left(2x\right)
         \end{array}\right)
     \end{equation}
-    or any other smooth function $h\left(q\right)$ that satisfies requirements 1) and 2) of Proposition~\ref{proposition:no-vhc-for-pvtol}.
+    or any other smooth function $h(q)$ that satisfies requirements~1) and~2) of Proposition~\ref{proposition:no-vhc-for-pvtol}.
+    While the constraint~\eqref{eq:implicit-vhc-candidate} does not meet Definition~\ref{def:VHC}, it is straightforward to show that it satisfies the conditions of Theorem~4 in~\cite{Chen-2009} and is therefore a controllable servo constraint.
 
     The arguments above naturally raise the question of the practical realizability of such a trajectory in a physical system, particularly in the presence of model uncertainties. One might question whether the strong requirement of passing the system through the given configuration $q_{0}$ with a precisely specific velocity is feasible, as it may appear unrealistic in practice.
     However, this requirement is a direct consequence of imposing a VHC that constrains the system to move along a prescribed direction. In real-world scenarios, slight deviations from the VHC allow the system to traverse this configuration with a range of possible velocities. Below we demonstrate, that despite the strict requirement for the velocity, the trajectory can still be stabilized with an appropriate feedback controller.
@@ -354,7 +386,7 @@
     \]
     To verify the accessibility condition, we compute the determinant of the matrix
     \[
-      \Psi(q,\dot q) \equiv \left[f,g_{1},g_{2},\mathrm{ad}_{f}g_{1},\mathrm{ad}_{f}g_{2},\mathrm{ad}_{f}^{2}g_{1}\right]
+      \Psi(q,\dot q) := \left[f,g_{1},g_{2},\mathrm{ad}_{f}g_{1},\mathrm{ad}_{f}g_{2},\mathrm{ad}_{f}^{2}g_{1}\right]
     \]
     which equals to
     \[
@@ -376,7 +408,7 @@
     \[
       w:=u-u_{*}\left(\tau\right).
     \]
-    The variables $\rho\equiv\left(\rho_{1},\dots,\rho_{5}\right)^{\top}$
+    The variables $\rho := \left(\rho_{1},\dots,\rho_{5}\right)^{\top}$
     serve as transverse coordinates, meaning they vanish when the phase space point lies on the reference orbit.
     The coordinate $\tau \in [-\pi, \pi)$ represents
     projection of the phase space point onto the reference trajectory.
@@ -395,24 +427,20 @@
     \end{equation}
     Next, we substitute the transformation $\left(q,\dot{q}\right)=\mu\left(\rho,\tau\right)$
     into the right-hand side of~(\ref{eq:transverse-dynamics-1})
-    and solve for $\dot{\rho}$ and $\dot{\tau}$. Since the transformation is diffeomorphic, the Jacobian matrix is invertible, ensuring the validity of this step. Moreover, we observe that $\dot \tau > 0$ within a tubular neighborhood and bounded input $w$, which justifies -- following~\cite{Banaszuk-1995} -- dividing $\dot{\rho}$ by $\dot{\tau}$ to obtain the transverse dynamics in the form of a general nonlinear system:
+    and solve for $\dot{\rho}$ and $\dot{\tau}$. Since the transformation is diffeomorphic, the Jacobian matrix is invertible, ensuring the validity of this step. Moreover, we observe that $\dot \tau > 0$ within a tubular neighborhood and bounded input $w$, which justifies -- following~\cite{Banaszuk-1995,Finet-2015} -- dividing $\dot{\rho}$ by $\dot{\tau}$ to obtain the transverse dynamics in the form of a general nonlinear system:
     \begin{equation}
     \label{eq:transverse-dynamics-2}
-      \frac{d\rho}{d\tau}=f\left(\rho,\tau,w\right).
-    \end{equation}
-    Linearizing~(\ref{eq:transverse-dynamics-2}) with respect to $\rho$ and $w$ yields:
-    \[
       \frac{d\rho}{d\tau}=A\left(\tau\right)\rho+B\left(\tau\right)w+o\left(\tau,\rho,w\right),
-    \]
-    where the function $o\left(\tau,\rho,w\right)$ collects all bilinear, quadratic and higher-order terms in $\rho$ and $w$; the matrix functions
-    \begin{align*}
-      A\left(\tau\right) &:= \left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial\rho}\right)_{\rho=0,w=0}\quad\text{and}\quad \\
-      B\left(\tau\right) &:= \left(\frac{\partial f\left(\rho,\tau,w\right)}{\partial w}\right)_{\rho=0,w=0}
-    \end{align*}
-    are periodic with period $2\pi$.
-    Based on the arguments in~\cite[Theorem~1]{Yakubovich-1986}, the controllability of the LTV system 
+    \end{equation}
+    where
+    $A(\tau) \in \mathbb{R}^{5\times5}$ and 
+    $B(\tau) \in \mathbb{R}^{5\times2}$ are $2\pi$-periodic matrix functions and
+    $o\left(\tau,\rho,w\right)$ collects bilinear, quadratic and higher-order terms in $\rho$ and $w$.
+
+    Based on the arguments in~\cite{Yakubovich-1986}, the controllability of the LTV system
     \begin{equation}
-      \frac{d\bar{\rho}}{d\tau}=A\left(\tau\right)\bar{\rho}+B\left(\tau\right)w\label{eq:linearized-transverse-dynamics}
+    \label{eq:linearized-transverse-dynamics}
+      \frac{d\bar{\rho}}{d\tau} = A\left(\tau\right)\bar{\rho}+B\left(\tau\right)w
     \end{equation}
     over one period implies the existence of an exponentially stabilizing feedback of the form $w\left(\tau,\bar\rho\right)=K\left(\tau\right)\bar\rho$ with a $2\pi$-periodic matrix of feedback gains $K\left(\tau\right):\mathbb{R}\to\mathbb{R}^{2\times5}$.
     Moreover, as shown in~\cite{Leonov-2006}, the exponential stability of the transversally linearized system guarantees the asymptotic orbital stability of the reference trajectory for the original nonlinear system.
@@ -428,34 +456,34 @@
     The controllability Gramian~\cite[Proposition~5.2]{Kalman-1960-optimal-control}
     over one period has the following eigenvalues:
     \[
-      \mathrm{eigvals} \, W\left(0,2\pi\right): \quad \left\{ 744.,\,70.7,\,15.3,\,5.16,\,0.0537\right\},
+      \mathrm{eigvals} \, W\left(0,2\pi\right): \quad \left\{ 744.0,\,70.7,\,15.3,\,5.16,\,0.0537\right\},
     \]
     confirming the controllability of the LTV system. The feedback gain matrix $K\left(\tau\right)$ was computed using the LQR~\cite{Gusev-2010}, with weighting matrices $R=I_{2\times2}$ and $Q=I_{5\times5}$. 
-    The eigenvalues of the monodromy matrix $F_{2\pi}$ for the closed-loop system are:
-    \begin{align*}
-      \mathrm{eigvals} \, F_{2\pi}: 
-       \left\{ 1.38,\,5.27\pm0.758i,\,0.268\pm5.48i\right\} \times 10^{-3},
-    \end{align*}
-    all of which lie inside the unit circle, ensuring exponential stability.
+    % The eigenvalues of the monodromy matrix $F_{2\pi}$ for the closed-loop system are:
+    % \begin{align*}
+    %   \mathrm{eigvals} \, F_{2\pi}: 
+    %    \left\{ 1.38,\,5.27\pm0.758i,\,0.268\pm5.48i\right\} \times 10^{-3},
+    % \end{align*}
+    % all of which lie inside the unit circle, ensuring exponential stability.
+
     To demonstrate the effectiveness of the proposed control law~(\ref{eq:nonlinear-control}),
     we performed computer simulations of the closed-loop nonlinear system with the initial state $q_{1}=\left(0.1,-0.5,0.0\right)^{\top}$, $\dot{q}_{1}=0_{3}$,
     and an integration time step of $10$ ms. The simulation results are presented in Fig.~\ref{fig:pvtol-sim}. As observed, the system state converges to the desired orbit, and all signals remain smooth and bounded. The behavior of transverse coordinates $\rho$ and control input $u$ is presented in Fig.~\ref{fig:pvtol-transverse}. 
 
     The analysis demonstrates the feasibility of the trajectory~(\ref{eq:ref-traj}). Based on this result, we conclude that the VHC~(\ref{eq:implicit-vhc-candidate}) is also feasible, as it holds along this trajectory. Moreover, we demonstrate in the following section, there exists a family of trajectories along which the relation~(\ref{eq:implicit-vhc-candidate}) also holds.
 
-    \begin{figure}
-      \begin{centering}
-        \includegraphics[width=7.5cm]{fig/pvtol_phase_coords}
-      \par\end{centering}
-      \caption{Closed loop system simulation results.}\label{fig:pvtol-sim}
-    \end{figure}
-    \begin{figure}
-      \begin{centering}
-        \vspace{4pt}
-        \includegraphics[width=7.5cm]{fig/pvtol_transverse}
-      \par\end{centering}
-      \caption{Evolution of transverse coordinates and control inputs versus trajectory projection $\tau$ in the closed loop system.}\label{fig:pvtol-transverse}
-    \end{figure}
+    \begin{figure}\begin{centering}
+        \includegraphics[width=0.99\linewidth]{fig/pvtol_phase_coords}
+      \par
+      \caption{Closed loop system simulation results.}
+      \label{fig:pvtol-sim}
+    \end{centering}\end{figure}
+    \begin{figure}\begin{centering}
+        \includegraphics[width=0.99\linewidth]{fig/pvtol_transverse}
+      \par
+      \caption{Evolution of transverse coordinates and control inputs versus trajectory projection $\tau$ in the closed loop system.}
+      \label{fig:pvtol-transverse}
+    \end{centering}\end{figure}
 
   \section{Singular Reduced Dynamics}
   \label{sec:non-regular-vhc}
@@ -505,16 +533,12 @@
     
     As observed, equation~(\ref{eq:pvtol-reduced-dynamics}) exhibits a singularity
     at $\theta=0$, thereby violating requirements of the Picard-Lindelöf
-    existence theorem. However, as shown in~\cite[Theorem~1]{Surov-2018},
-    smooth solutions to the reduced dynamics with isolated singularities may still exist, 
-    provided that certain additional conditions are satisfied by the coefficients
-    $\alpha\left(\theta\right),\beta\left(\theta\right)$
-    and $\gamma\left(\theta\right)$.
+    existence theorem. However, as shown in~\cite[Theorem~1]{Surov-2025} and~\cite[Theorem~4]{Remizov-2023}, smooth solutions to second-order differential equations with isolated singularities may still exist, provided that certain additional conditions are satisfied by the coefficients $\alpha(\theta)$, $\beta(\theta)$, and $\gamma(\theta)$.
     We now recall the formulation of this existence
     \begin{thm}
     \label{thm:singular-solutions-existence}
-      Let us consider the differential
-      equation~(\ref{eq:alpha-beta-gamma}) with the coefficients 
+      Consider the differential
+      equation~(\ref{eq:alpha-beta-gamma}) with coefficients 
       $\alpha(\theta), \beta(\theta)$ and $\gamma(\theta)$ defined on an open nontrivial interval $\theta\in I\subset\mathbb{R}$.
       Suppose the following conditions hold:
       \begin{itemize}
@@ -531,7 +555,7 @@
             \alpha'\left(\theta_{s}\right)>0,\quad\gamma\left(I\right)>0,\quad\frac{\beta\left(\theta_{s}\right)}{\alpha'\left(\theta_{s}\right)}<-\frac{1}{2}.
           \]
       \end{itemize}
-      Then, for any real values $\theta_{1},\theta_{2}\in I$, $\theta_{1}<\theta_{s}<\theta_{2}$,
+      For any real values $\theta_{1},\theta_{2}\in I$, $\theta_{1}<\theta_{s}<\theta_{2}$,
       and $\dot{\theta}_{1}\geq0$, $\dot{\theta}_{2}\geq0$ there exists
       the smooth function $\theta_{*}\left(t\right)\in C^{2}$ defined on
       the interval $\left[t_{1},t_{2}\right]$ satisfying the equation~(\ref{eq:alpha-beta-gamma})
@@ -565,16 +589,17 @@
     is not removable and cannot be eliminated through a coordinate change or different representations of the VHC. To demonstrate this, consider the following
     \begin{thm}
     \label{thm:singularity-necessity} 
-      Let $q_{*}\left(t\right)$ be a smooth trajectory to the system~(\ref{eq:lag-sys}). Suppose that, at some time $t_{s}$, the trajectory satisfies 
+      Let $q_{*}\left(t\right)$ be a smooth trajectory of the system~(\ref{eq:lag-sys}). Suppose that, at some time $t_{s}$, the trajectory satisfies 
       \begin{align}
       \label{eq:singularity-condition}
         & \, \, \dot{q}_{*}\left(t_{s}\right)\ne0\quad\text{and}\nonumber \\
         & \, \, B_{\perp}\left(q_{*}\left(t_{s}\right)\right)M\left(q_{*}\left(t_{s}\right)\right)\dot{q}_{*}\left(t_{s}\right)=0,
       \end{align}
-      where $q_{s}\equiv q_{*}\left(t_{s}\right)$ and $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n}\setminus\left\{ 0\right\}$  is a left annihilator of $B\left(q\right)$. Then, for any smooth parametrization of the form $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$, the associated reduced dynamics necessarily satisfy
+      where $q_{s} := q_{*}\left(t_{s}\right)$ and $B_{\perp}\left(q\right)\in\mathbb{R}^{1\times n}\setminus\left\{ 0\right\}$  is a left annihilator of $B\left(q\right)$. 
+      Then for any smooth parametrization of the form $q_{*}\left(t\right)=\phi\left(\theta_{*}\left(t\right)\right)$, the associated reduced dynamics necessarily satisfy
       \[
         \alpha \left(\theta_{s}\right) = 0, \quad \text{where} \quad
-        \theta_{s}\equiv\theta_{*}\left(t_{s}\right).
+        \theta_{s} := \theta_{*}\left(t_{s}\right).
       \]
       Furthermore, if $G\left(q_{s}\right) \notin \mathrm{Im}\left[B\left(q_{s}\right)\right]$, then 
       \begin{itemize}
@@ -605,11 +630,11 @@
 
       Assume, for the sake of contradiction, that there exists a function $h(q)$ satisfying Definition~\ref{def:VHC}. Then the associated manifold
       \[
-        \Gamma\equiv\left\{ \left(q,\dot{q}\right)\in\mathbb{R}^{2n}\mid h\left(q\right)=0\quad \text{and} \quad L_{\dot{q}}h\left(q\right)=0\right\}
+        \Gamma := \left\{ \left(q,\dot{q}\right)\in\mathbb{R}^{2n}\mid h\left(q\right)=0\quad \text{and} \quad L_{\dot{q}}h\left(q\right)=0\right\}
       \]
       is controlled invariant. This implies that the following system of linear algebraic equations in $u$ must be solvable:
       \begin{align*}
-        & dh\left(q\right)M^{-1}\left(q\right)\left(B\left(q\right)u-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)\right)+L_{\dot{q}}^{2}h\equiv0,
+        & dh\left(q\right)M^{-1}\left(q\right)\left(B\left(q\right)u-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)\right)+L_{\dot{q}}^{2}h = 0,
       \end{align*}
       at every point of $\Gamma$, in particular for all $\dot q \in T_{q_s} \mathcal{C}$. 
       At the point $q_s$ the matrix 
@@ -631,9 +656,10 @@
     However, there are no fundamental reasons to disregard trajectories like $q_*(t)$ or to consider the associated constraint $\phi(\theta)$ invalid, as the trajectory satisfies all typical requirements of the motion planning problem, as previously shown. 
     In this context, Definition~\ref{def:VHC} plays a restrictive role by excluding such trajectories from further consideration. Consequently, the definition becomes counterproductive in the context of motion planning. In the following, we illustrate -- using the example of the PVTOL system -- a family of practically relevant trajectories, yet are excluded by the definition.
 
+
   \section{Example: PVTOL Aircraft Trajectories}
   \label{sec:pvtol-periodic-trajectories}
-    In the previous section, we demonstrated that the VHC~\eqref{eq:pvtol-vhc} leads to reduced dynamics with an isolated singularity at $\theta_s = 0$, corresponding to the configuration $x_s = 0, z_s = 0$ and $\psi_s = \frac{\pi}{2}$. Notably, it is possible to define a VHC that imposes a singularity at an arbitrary configuration $q_{s} \equiv \left(x_{s}, z_{s}, \psi_{s}\right)^{\top}$ as follows:
+    In the previous section, we demonstrated that the VHC~\eqref{eq:pvtol-vhc} leads to reduced dynamics with an isolated singularity at $\theta_s = 0$, corresponding to the configuration $x_s = 0, z_s = 0$ and $\psi_s = \frac{\pi}{2}$. Notably, it is possible to define a VHC that imposes a singularity at an arbitrary configuration $q_{s} := \left(x_{s}, z_{s}, \psi_{s}\right)^{\top}$ as follows:
     \begin{equation}
     \label{eq:pvtol-vhc-poly}
       \phi\left(\theta\right)=q_{s}+B\left(q_{s}\right)\left(\begin{array}{c}
@@ -657,10 +683,14 @@
 
   \section{Discussion on VHC Definitions}
   \label{sec:VHC-definitions}
-    To the best of our knowledge, Definition~\ref{def:VHC} was first formally introduced in~\cite{Jankuloski-2012}, although the requirement for the controlled invariance of $\Gamma$ appeared in earlier works such as~\cite{Consolini-2010,Consolini-2011}. 
+    To the best of our knowledge, Definition~\ref{def:VHC} was first formally introduced in~\cite{Jankuloski-2012}, although the requirement for the controlled invariance of $\Gamma$ appeared in earlier works such as~\cite{Consolini-2011,Consolini-2010}. 
     This definition represents a shift toward a more narrow interpretation of VHCs
     compared to earlier studies, for example, the broader formulation presented in~\cite[p.~204]{Shiriaev-2008}. In that work, the concept of a VHC is based on the existence of a feedback control law $u$ that ensures the invariance of the relation $q = \phi(\theta)$ along at least one solution $q_*(t)$ of the system~(\ref{eq:lag-sys}).
     A similar interpretation is found in~\cite[pp. 1165-1167]{Shiriaev-2005-constructive-tool}, where the authors require the existence of a static feedback control such that the relation $q = \phi(\theta)$ is invariant along solutions of the closed-loop system. This broader viewpoint is consistent with the results established in Theorems~\ref{thm:singular-solutions-existence} and~\ref{thm:singularity-necessity}.
+
+    The concept of servo-constraints, described in~\cite{Chen-2009}, also assumes a more general comprehension. The author formulating
+
+    The author does not require invariant properties of a manifold, instead they consider the restrictions on the control input
 
     By narrowing the interpretation of VHCs, the authors of~\cite{Jankuloski-2012} did not provide a formal justification for excluding the earlier, broader formulations. Moreover, they did not address whether the conditions introduced in Definition~\ref{def:VHC} are necessary. Subsequent works adopting this definition \cite{Maggiore-2013,Consolini-2018,Otsason-2019} have not clarified this issue either. 
 
@@ -762,6 +792,10 @@
       New Results on Trajectory Planning for Underactuated Mechanical Systems with Singularities in Dynamics of a Motion Generator, 
       2018 IEEE Conference on Decision and Control (CDC), Miami, FL, USA, 2018, pp. 6900-6905,
       doi: 10.1109/CDC.2018.8618669.
+
+    \bibitem{Surov-2025}
+       M. Surov, Singular motion generators in the problem of motion planning for underactuated mechanical systems,
+       Nonlinear Dynamics 113, 29697--29718 (2025).
 
     \bibitem{Hauser-1992-pvtol} 
       J. Hauser, S. Sastry, G. Meyer,
@@ -871,6 +905,20 @@
       Closed Servoconstraints in Periodic Motion Planning for Underactuated Mechanical Systems,
       Regul. Chaot. Dyn. 30, 451–462 (2025),
       doi: 10.1134/S1560354725030013.
+
+    \bibitem{Chen-2009}
+      Chen Y-H.,
+      Constraint-following Servo Control Design for Mechanical Systems,
+      Journal of Vibration and Control, 2009;15(3):369--389.
+
+    \bibitem{Finet-2015}
+      S. Finet L. Praly,
+      Feedback Linearization of the Transverse Dynamics for a Class of One Degree Underactuated Systems,
+      Proc. of the 54th IEEE Conference on Decision and Control,
+      Japan, pp. 7802--7807, 2015.
+
+    \bibitem{Remizov-2023}
+      A. O. Remizov, Singularities of quasi-linear differential equations, 2023, issue 1, pp. 85--105, doi: 10.47910/FEMJ202308.
 
   \end{thebibliography}
     

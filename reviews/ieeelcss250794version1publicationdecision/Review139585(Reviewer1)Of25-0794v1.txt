@@ -1,0 +1,25 @@
+The paper discusses the existence of virtual holonomic constraints that
+do not satisfy the controlled invariance condition of Definition 1.
+
+The topic is interesting  and relevant. Condition 1 considerably
+simplifies the discussion of the reduced dynamics, since it avoids
+singularities, such as $\alpha(\theta)=0$ in (12). However, it is
+certainly true that constraints not satisfying condition 1 can still
+be satisfied by some solutions, as shown in the PVTOL example.
+
+In general, the paper’s motivation and the presentation are
+clear. I have the following remarks:
+
+- In the PVTOL example, it is assumed that the coupling factor
+$\epsilon$ is zero. This is a simplification of the complete model
+(equation (6) of reference [12]). Can the example presented in the
+paper be extended to the more general setting of $\epsilon \neq 0$?
+
+- The real contribution of the paper under review with respect to
+reference [20] is not completely clear. In particular, reference [20]
+already presents a virtual constraint for the Furuta pendulum in which
+Definition 1 is not satisfied, since $\alpha$ crosses 0. The fact that
+$ \alpha$ crosses 0 and that Definition 1 is not satisfied are
+equivalent. Also, the method for orbital stabilization presented in the
+paper is not new.  The author should state more clearly the new
+information presented in the paper with respect to [20].
